@@ -1,22 +1,12 @@
 from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
+from llm import get_chat_model
 
 from tools.jd_analyzer import analyze_jd
 from tools.user_analyzer import analyze_user
 from tools.gap_analyzer import analyze_gap
 
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-
-model = ChatOpenAI(
-    model="doubao-1-5-lite-32k-250115",
-    api_key=os.getenv("ARK_API_KEY"),
-    base_url="https://ark.cn-beijing.volces.com/api/v3",
-    temperature=0
-)
+model = get_chat_model(temperature=0)
 
 
 tools = [

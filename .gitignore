@@ -2,3 +2,20 @@
 .venv/
 __pycache__/
 *.pyc
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+runtime/
+.pytest_cache/
+
+# Private local V0 runtime memory; publish only the fictional example.
+/memory/user_state.json

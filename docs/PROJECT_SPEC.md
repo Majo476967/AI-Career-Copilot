@@ -875,7 +875,9 @@ Task Planner 使用 LLM。
 * 不重复最近已经完成的任务；
 * 不超过用户合理时间预算。
 
-Python 层至少防止完全相同或规范化后相同的任务重复创建。规范化用于识别文本层面的重复；语义重复由 Planner Prompt + Evaluation 处理。V1.0 不声称彻底解决所有语义重复。
+任务文本经过 NFKC Unicode 规范化、首尾空白去除、连续空白折叠和 casefold 后生成 `task_key`。SQLite partial unique index 仅限制 `status = 'pending'` 的任务：同一 normalized key 不允许同时存在多个 pending 任务，创建或状态更新均受此约束。
+
+completed / partial / not_completed / superseded 历史任务不参与该唯一约束，不能阻止未来再次创建同文本任务；旧任务及 Events 保留，不通过删除历史实现去重。数据库允许历史后的再次创建，不代表 Planner 应机械重复最近已完成的任务。语义重复继续由 Planner Prompt + Evaluation 处理，V1.0 不声称彻底解决所有语义重复。
 
 错误示例：
 
@@ -905,7 +907,7 @@ Feedback 可选。
 
 * 保存历史；
 * 增加对应任务的正向 Evidence，但不因单次完成直接升级完整 Capability Level；
-* 不允许原样再次推荐；
+* 不机械原样再次推荐最近已完成的任务；历史记录不构成数据库永久禁止同文本任务的约束（见第 17 节）；
 * 如 Gap 仍存在，可增加难度；
 * 重新计算 Priority。
 
@@ -1039,7 +1041,7 @@ Summary 只是 Context Compression。
 
 > 某 Capability 尚未被摘要覆盖的历史事件累计超过约 10 条时，增量更新摘要。
 
-使用现有 Summary + `covered_until` 之后的新事件更新摘要，并推进覆盖位置；不得仅因总历史已超过阈值就反复汇总同一批记录。原始 Events 保留。
+使用现有 Summary + `covered_until_event_id` 之后的新事件更新摘要，并推进覆盖位置；不得仅因总历史已超过阈值就反复汇总同一批记录。原始 Events 保留。
 
 触发阈值、Summary 长度上限使用配置常量；上下文预算遵守第 43 节。
 
@@ -1095,7 +1097,7 @@ memory_summaries
 id
 scope
 summary
-covered_until
+covered_until_event_id
 updated_at
 ```
 
@@ -1132,8 +1134,11 @@ major
 target_direction
 available_hours_per_day
 resume_text
+profile_json
 updated_at
 ```
+
+V1.0 为单用户本地状态，`id = 1`；`profile_json` 保存结构化画像，`available_hours_per_day` 可为空，否则位于 0～24。Profile 使用 Upsert。
 
 ---
 
@@ -1143,10 +1148,24 @@ updated_at
 id
 capability_name
 level
-evidence_json
-source
 updated_at
 ```
+
+`capability_name` 唯一且非空；`level` 为 0～4 整数，Level 0 仍只表示 unknown evidence。Evidence 不再全部放入能力表的 JSON 字段，独立存储如下。
+
+### 25.2.1 capability_evidence
+
+```text
+id
+capability_id
+evidence_type
+content
+source
+source_id
+created_at
+```
+
+`capability_id` 外键关联 `user_capabilities.id`；`evidence_type`、`content`、`source` 非空，`source_id` 可为空，记录来源和时间。添加 Evidence 不自动修改 Capability Level。
 
 ---
 
@@ -1178,12 +1197,25 @@ archived
 id
 capability
 task_text
+task_key
+reason
+estimated_time
 acceptance_criteria_json
 status
-feedback
 created_at
 completed_at
 ```
+
+`task_key` 由第 17 节的规范化规则生成，仅对 pending 任务唯一：
+
+```sql
+CREATE UNIQUE INDEX IF NOT EXISTS pending_task_key ON tasks(task_key)
+WHERE status = 'pending';
+```
+
+`reason` 和 `estimated_time` 保存任务原因及预计耗时；验收条件以 JSON 数组保存。没有单独的 `tasks.feedback` 列：历次 Feedback 保存在关联 Task 的 Events `payload_json` 中，不随 Current Task 状态更新而覆盖。
+
+正常新任务记录创建时间；迁移旧任务无法确认真实创建/完成时间时，`created_at` / `completed_at` 可为空，并在迁移事件 metadata 中标记 unknown。非 completed 任务的 `completed_at` 为空。
 
 用户状态：
 
@@ -1231,11 +1263,11 @@ created_at
 id
 scope
 summary
-covered_until
+covered_until_event_id
 updated_at
 ```
 
-`covered_until` 标记已纳入摘要的事件覆盖位置，支持增量更新。
+`scope` 唯一；`covered_until_event_id` 可为空，非空时外键关联 `events.id`，标记已纳入摘要的事件覆盖位置，支持增量更新。
 
 ## 25.7 events
 
@@ -1264,7 +1296,17 @@ PROFILE_CONFIRMED
 REPLAN
 ```
 
-`payload_json` 保存相关事实、变化依据或决策理由；可关联 Task、JD、Profile 和 Planning Snapshot。Current State 可更新，Events 只追加、不覆盖，不实现复杂 Event Sourcing。
+`payload_json` 保存相关事实、变化依据或决策理由；通过 `entity_type` / `entity_id` 关联 Task、JD、Profile 或 Planning Snapshot。`event_type` 由上述枚举约束，`id` 为自增整数。`created_at` 是事件入库时间；迁移时不得将其冒充旧任务的真实发生时间，未知历史时间在 metadata 中明确标记。
+
+### 25.8 Current State 与 Events 实现约束
+
+* Current State 可以更新；Events 仅提供 append/query，不提供 update/delete 业务接口；SQLite 触发器同时阻止 Events UPDATE 和 DELETE。
+* Repository 不隐式生成业务事件。调用方通过同一连接上的 `repository.transaction()` 组合 State 写入和 Event 追加，成功一起提交，失败整体回滚；事务外单次写入立即提交，不支持嵌套事务。
+* SQLite 启用外键约束；JSON 字段保存合法 JSON，Repository 负责序列化与读取解码。
+* 迁移幂等键保存在 Events `payload_json.migration.import_key`，由唯一索引约束，避免重复导入；原 JSON 不删除，V1.0 不双写 JSON。
+* 不实现复杂 Event Sourcing，不通过重放所有事件重建 Current State。
+
+以上为 Phase 1 Schema implementation clarification，不增加产品 Scope。
 
 ---
 
@@ -1858,7 +1900,7 @@ GitHub 中：
 * SQLite 数据库及 runtime 数据的 `.gitignore` 规则；
 * 检查旧 `memory/user_state.json` 是否包含真实个人数据，确保真实个人数据不进入公开仓库。
 
-这些是后续开发要求，本次规格修订不执行依赖补充、配置文件创建或旧数据修改。
+真实 runtime Memory `memory/user_state.json` 必须由 `.gitignore` 忽略；如已被 Git 跟踪，使用 `git rm --cached` 停止后续跟踪，保留本地文件，不重写 Git 历史。公开 Demo / migration 示例使用完全虚构的 `memory/user_state.example.json`。停止跟踪会修改 Git index，不代表已经 commit，也不会清除历史提交中的内容。
 
 ---
 

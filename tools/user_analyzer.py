@@ -1,17 +1,8 @@
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
+from llm import get_chat_model
 
 
-model = ChatOpenAI(
-    model="doubao-1-5-lite-32k-250115",
-    api_key=os.getenv("ARK_API_KEY"),
-    base_url="https://ark.cn-beijing.volces.com/api/v3",
-    temperature=0
-)
+model = get_chat_model(temperature=0)
 
 
 @tool
