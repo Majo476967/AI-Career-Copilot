@@ -80,7 +80,7 @@ AI Career Copilot V1.0 将这个问题定义为：
 
 ## 2.1 一句话定位
 
-**AI Career Copilot 是一个面向校招用户的多岗位求职准备决策 Agent，根据多个目标 JD、用户能力以及历史任务执行情况，持续判断当前最高 ROI 的能力 Gap，并动态生成下一步准备任务。**
+**AI Career Copilot 是一个面向校招用户的多岗位求职准备决策 Agent，根据多个目标 JD、用户能力以及历史任务执行情况，持续判断多岗位覆盖下的准备优先级，识别 high-leverage capability gap，并动态生成下一步准备任务。**
 
 ## 2.2 目标用户
 
@@ -363,7 +363,7 @@ Codex 不得自行实现：
 * 完整模拟面试系统；
 * MCP；
 * Multi-Agent；
-* LangGraph 重构；
+* 新增自定义 LangGraph 编排；
 * Redis；
 * Kafka；
 * Celery；
@@ -625,7 +625,7 @@ Programming
 
 | Level | 定义                     |
 | ----- | ---------------------- |
-| 0     | 无相关证据                  |
+| 0     | 尚无可验证能力证据 / unknown evidence |
 | 1     | Knowledge：理解概念         |
 | 2     | Practice：完成过练习/Demo    |
 | 3     | Experience：真实项目/业务使用   |
@@ -636,6 +636,8 @@ Programming
 > knowledge / practice / experience / depth
 
 继续保留，但正式转换为能力成熟度体系。
+
+Level 0 不能直接等价为“用户不会”或“能力很弱”。证据不足时，应允许用户补充或确认；UI 和 Explainability 必须明确标注这是 Evidence Gap（证据缺口），不能将计算中的 Level 0 描述为已证实的能力不足。
 
 ---
 
@@ -649,6 +651,15 @@ Programming
 
 Capability 必须同时保存 Evidence。
 
+每条 Evidence 至少包含：
+
+* `evidence_type`：证据类型；
+* `content`：证据内容；
+* `source_id` / `source`：可关联的来源标识和/或明确来源说明；
+* `created_at`：证据记录时间。
+
+必须保留证据来源和时间，不能只保存无来源的描述字符串。单次 Task completed 只增加相应证据，不能据此直接升级一个完整 Capability Level；等级调整必须结合证据内容、任务难度和对应等级定义。
+
 示例：
 
 ```json
@@ -656,9 +667,13 @@ Capability 必须同时保存 Evidence。
   "capability": "SQL",
   "level": 2,
   "evidence": [
-    "简历中提到数据库课程",
-    "JOIN Task completed",
-    "Subquery Task partial"
+    {
+      "evidence_type": "task_feedback",
+      "content": "JOIN Task completed；具体产出与验收情况见关联任务",
+      "source_id": "task-001",
+      "source": "task_feedback",
+      "created_at": "2026-09-11T10:00:00+08:00"
+    }
   ]
 }
 ```
@@ -689,7 +704,17 @@ Priority 不由 LLM自由决定。
 
 由 Python 计算。
 
+Priority Score 表示 preparation priority，即多岗位覆盖下的准备优先级，用于识别 high-leverage capability gap。它是可解释的产品启发式，可以用于提高有限时间的准备收益，但不是严格数学或经济意义上的 ROI，也不代表已计算出最优 ROI。
+
+## 15.0 候选过滤
+
+计算 Priority Score 前，必须先过滤不存在正向 Gap 的 Capability。仅 `Gap Severity > 0` 的能力进入评分候选；没有 Gap 的能力不能因为 Coverage / Importance 高而进入 Top Priority。
+
+没有候选时，返回“暂无明确 Gap”，不得强行选择一个无 Gap 的能力。没有 Active JD 时不计算排名，避免分母为零。Level 0 参与计算时，仍须遵守第 13 节的 Evidence Gap 语义。
+
 ## 15.1 输入
+
+Active JD 等权；Archived JD 不参与计算。同一 JD 对同一归一化 Capability 只计一个岗位。
 
 每项 Capability 计算：
 
@@ -714,21 +739,18 @@ important = 0.7
 bonus = 0.3
 ```
 
-多个 JD 取平均/加权平均。
+Importance 仅在要求该能力的 Active JD 中求算术平均，不把未要求该能力的 JD 计入平均值分母，不使用岗位权重。
 
 ### Gap Severity
 
-根据：
+仅在要求该能力的 Active JD 中计算每个岗位的正向差值，再求平均并归一化：
 
 ```text
-Required Level - Current User Level
+Gap Severity =
+mean(max(required_level_jd - current_level, 0)) / 4
 ```
 
-归一化到：
-
-```text
-0～1
-```
+Required Level 与 Current Level 均采用 0～4 级，因此结果位于 0～1。不得先平均 Required Level 再计算正差值；已满足的岗位不能抵消其他岗位仍存在的 Gap。
 
 ### Feasibility
 
@@ -808,6 +830,10 @@ gap_type = practice
 
 Task Planner 应根据不同 Gap Type 生成不同任务。
 
+如果 Required Level 跨越多个等级，Task 只针对“下一未达到等级”设计：下一等级 1 / 2 / 3 / 4 分别对应 knowledge / practice / experience / depth。Level 0 的证据不足应先允许补充或确认，不能据此断言用户不懂基础知识。
+
+例如 Level 0 → Required Level 3，不能用单个任务直接宣称用户达到 Experience Level。任务完成也不等于自动获得真实项目经验或整体能力升级。
+
 不能出现：
 
 > Experience Gap → 推荐“阅读两篇文章”。
@@ -849,6 +875,8 @@ Task Planner 使用 LLM。
 * 不重复最近已经完成的任务；
 * 不超过用户合理时间预算。
 
+Python 层至少防止完全相同或规范化后相同的任务重复创建。规范化用于识别文本层面的重复；语义重复由 Planner Prompt + Evaluation 处理。V1.0 不声称彻底解决所有语义重复。
+
 错误示例：
 
 > 学习 SQL。
@@ -871,17 +899,19 @@ not_completed
 
 ## 18.1 Completed
 
+Feedback 可选。
+
 行为：
 
 * 保存历史；
-* 增加正向 Evidence；
+* 增加对应任务的正向 Evidence，但不因单次完成直接升级完整 Capability Level；
 * 不允许原样再次推荐；
 * 如 Gap 仍存在，可增加难度；
 * 重新计算 Priority。
 
 ## 18.2 Partial
 
-必须填写或允许填写 Feedback。
+Feedback / reason 必填。未提供原因时，应提示用户补充，不能自行编造用户卡点。
 
 例如：
 
@@ -896,6 +926,8 @@ not_completed
 
 ## 18.3 Not Completed
 
+Feedback / reason 必填。未提供原因时，应提示用户补充，不能自行编造用户卡点。
+
 系统不能简单重复原任务。
 
 应考虑：
@@ -905,6 +937,19 @@ not_completed
 * 是否缺少前置知识；
 * 用户可投入时间是否不足；
 * Priority 是否需要调整。
+
+上述原因只能结合用户提供的 Feedback / reason 判断，不能将模型猜测写成用户事实。
+
+## 18.4 Replanning 触发与当前任务保留
+
+所有会影响决策的事件发生后，重新计算 Priority，并重新评估当前任务。不得机械废弃当前 pending task。
+
+先判断当前任务是否仍与新的 Top Priority / Current State 一致：
+
+* 仍有效 → 保留当前任务；
+* 已失效 → 将旧任务设为 `superseded`，再生成新任务；如果没有有效 Gap 候选，不强行生成任务。
+
+已完成或已反馈的任务保留其反馈状态和历史，再决定后续任务。Replanning 不等于每次都必须换任务；REPLAN 记录应说明保留或替换的理由。记录 REPLAN 本身不递归触发下一次 Replanning。
 
 ---
 
@@ -955,6 +1000,10 @@ Current Tasks
 
 历史不因新状态出现而删除。
 
+使用第 25.7 节的轻量 `events` 表记录事件。Current State 可以更新；Events 只追加，不覆盖。能力变化等事实可保存在相关事件的 `payload_json` 中，保留必要的变化依据。
+
+不实现复杂 Event Sourcing；不要求通过重放所有事件重建当前状态。
+
 目的：
 
 * 可追溯；
@@ -988,9 +1037,11 @@ Summary 只是 Context Compression。
 
 触发条件 V1.0 可以采用：
 
-> 某 Capability 累计超过约 10 条历史事件时更新摘要。
+> 某 Capability 尚未被摘要覆盖的历史事件累计超过约 10 条时，增量更新摘要。
 
-具体阈值允许在实现时配置。
+使用现有 Summary + `covered_until` 之后的新事件更新摘要，并推进覆盖位置；不得仅因总历史已超过阈值就反复汇总同一批记录。原始 Events 保留。
+
+触发阈值、Summary 长度上限使用配置常量；上下文预算遵守第 43 节。
 
 ---
 
@@ -1007,7 +1058,7 @@ Current Priority
 +
 Relevant Capability Summary
 +
-最近最多 5 条相关任务
+最近最多 5 条相关 History
 +
 最新 Feedback
 ```
@@ -1183,6 +1234,37 @@ summary
 covered_until
 updated_at
 ```
+
+`covered_until` 标记已纳入摘要的事件覆盖位置，支持增量更新。
+
+## 25.7 events
+
+轻量 Append-only Events 表：
+
+```text
+id
+event_type
+entity_type
+entity_id
+payload_json
+created_at
+```
+
+记录以下事件：
+
+```text
+TASK_CREATED
+TASK_COMPLETED
+TASK_PARTIAL
+TASK_NOT_COMPLETED
+JD_ADDED
+JD_ARCHIVED
+JD_REPLACED
+PROFILE_CONFIRMED
+REPLAN
+```
+
+`payload_json` 保存相关事实、变化依据或决策理由；可关联 Task、JD、Profile 和 Planning Snapshot。Current State 可更新，Events 只追加、不覆盖，不实现复杂 Event Sourcing。
 
 ---
 
@@ -1493,6 +1575,8 @@ Priority Score = 0.82
 
 > “AI 推荐你学习 SQL。”
 
+如果 Current Level = 0 源于证据不足，UI 和解释必须标明“尚无可验证能力证据 / Evidence Gap”，允许用户补充或确认，不得直接显示“用户不会”或“能力很弱”。Priority Score 应解释为多岗位覆盖下的准备优先级。
+
 ---
 
 # 34. Evaluation Goal
@@ -1515,7 +1599,11 @@ Baseline 使用：
 
 为了公平：
 
-Baseline 可以看到相同用户信息、JD 和相关历史文本，但：
+Direct LLM 与 Career Copilot 必须使用相同事实数据和相同可用历史范围，包括用户信息、JD 与相关历史。不得通过隐藏事实或缩小 Baseline 的可用历史范围制造优势。
+
+两组都必须保存原始输入、原始输出和评分；Evaluation Rubric 在正式实验前冻结。
+
+Baseline 直接通过文本获得这些事实，但：
 
 * 不使用结构化 Persistent State；
 * 不使用 Priority Engine；
@@ -1763,6 +1851,15 @@ GitHub 中：
 * `.env` 必须加入 `.gitignore`；
 * 提供 `.env.example`。
 
+开发阶段必须补齐以下工程基础：
+
+* `requirements.txt`：声明运行所需依赖，支持 Python 3.10 环境复建；
+* `.env.example`：仅提供配置项和占位值，不包含真实密钥；
+* SQLite 数据库及 runtime 数据的 `.gitignore` 规则；
+* 检查旧 `memory/user_state.json` 是否包含真实个人数据，确保真实个人数据不进入公开仓库。
+
+这些是后续开发要求，本次规格修订不执行依赖补充、配置文件创建或旧数据修改。
+
 ---
 
 # 42. LLM Configuration
@@ -1788,17 +1885,15 @@ llm.py
 Task Planner 每次默认只使用：
 
 ```text
-Profile Summary
+Current State
 +
-Active JD Capability Summary
+Active JD Summary
 +
-Current Capabilities
+Current Priority
 +
-Top Priority
+相关 Capability Summary
 +
-Relevant Memory Summary
-+
-最近最多5条相关 History
+最近最多 5 条相关 History
 +
 最新 Feedback
 ```
@@ -1807,7 +1902,18 @@ Relevant Memory Summary
 
 > SELECT 所有 Task History 后直接全部拼进 Prompt。
 
-这是解决长期使用 Context Growth 的核心机制。
+同时必须限制 Summary、单条 Feedback 和总 Context 的长度；仅限制记录条数不足以控制上下文增长。
+
+具体阈值使用配置常量，例如：
+
+* `MEMORY_SUMMARY_MAX_CHARS`；
+* `FEEDBACK_CONTEXT_MAX_CHARS`；
+* `PLANNER_CONTEXT_MAX_CHARS`；
+* `MEMORY_SUMMARY_EVENT_THRESHOLD`。
+
+实现时明确并统一长度计量单位，构造完成的总 Prompt 必须在总预算内；超限时对入模文本进行有界摘要或截取，不改写数据库中的原始 Feedback / Events。Current State 也只加载当前所需字段，不夹带完整历史。
+
+这是解决长期使用 Context Growth 的核心机制。Relevant Retrieval 继续使用 SQLite 条件查询，不引入 Vector Database。
 
 ---
 
@@ -1897,6 +2003,8 @@ Completed / Partial / Not Completed：
 
 > 都必须成功持久化。
 
+completed 的 Feedback 可选；partial / not_completed 的 Feedback / reason 必填。缺少原因时不得编造卡点。
+
 ---
 
 ## AC-07 Replanning
@@ -1905,7 +2013,7 @@ Feedback 后：
 
 > 系统必须重新检查 Priority / Task。
 
-不得只更新数据库而不影响下一次决策。
+不得只更新数据库而不影响下一次决策。所有影响决策的事件均须重算 Priority；仍有效的 pending task 保留，已失效的任务才设为 superseded 并按第 18.4 节决定新任务。
 
 ---
 
@@ -1923,6 +2031,8 @@ Feedback 后：
 
 > Planner 不得把完整 History 全量传给 LLM。
 
+最近相关 History 最多 5 条；Summary、单条 Feedback 和总 Context 均必须满足第 43 节的配置长度上限。
+
 ---
 
 ## AC-10 Evaluation
@@ -1934,6 +2044,8 @@ Feedback 后：
 结果：
 
 > 可重复运行并生成结果文件。
+
+两组同底层模型、同事实数据、同可用历史范围，保存原始输入、原始输出和评分；正式实验使用预先冻结的 Rubric。
 
 ---
 
@@ -1998,7 +2110,7 @@ Django
 Redis
 Kafka
 Celery
-LangGraph
+新增自定义 LangGraph 编排
 AutoGen
 CrewAI
 Multi-Agent
@@ -2010,6 +2122,8 @@ Docker
 Kubernetes
 Microservices
 ```
+
+LangGraph 边界：禁止新增自定义 LangGraph 编排。如果 LangChain `create_agent` 的内部依赖包含 LangGraph，不视为违反 Spec；不要求移除该传递依赖。
 
 原因：
 
