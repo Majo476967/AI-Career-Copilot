@@ -1,3 +1,4 @@
+# V0.x historical implementation. V1.0 uses core.gap_engine / core.priority_engine.
 from langchain_core.tools import tool
 from llm import get_chat_model
 

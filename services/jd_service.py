@@ -12,8 +12,9 @@ def input_key(text):
 
 
 class JDService:
-    def __init__(self, repository):
+    def __init__(self, repository, *, event_router=None):
         self.repo = repository
+        self.event_router = event_router
 
     @staticmethod
     def _input(text, file, filename):
@@ -45,6 +46,8 @@ class JDService:
             self._check_duplicate(text)
             jd_id = self.repo.add_jd(TargetJD(data["company"], data["job_title"], text, data))
             self.repo.append_event(Event(EventType.JD_ADDED, "jd", str(jd_id), {"planning_required": True}))
+            if self.event_router is not None:
+                self.event_router.dispatch(EventType.JD_ADDED)
         return self.get_jd(jd_id)
 
     @storage_errors
@@ -69,6 +72,8 @@ class JDService:
             if old["status"] == "active":
                 self.repo.archive_jd(jd_id)
                 self.repo.append_event(Event(EventType.JD_ARCHIVED, "jd", str(jd_id), {"planning_required": True}))
+                if self.event_router is not None:
+                    self.event_router.dispatch(EventType.JD_ARCHIVED)
             # Already archived: idempotent success, no duplicate event.
         return self.get_jd(jd_id)
 
@@ -88,6 +93,8 @@ class JDService:
             new_id = self.repo.add_jd(TargetJD(data["company"], data["job_title"], text, data))
             self.repo.append_event(Event(EventType.JD_REPLACED, "jd", str(new_id), {
                 "old_jd_id": old_jd_id, "new_jd_id": new_id, "planning_required": True}))
+            if self.event_router is not None:
+                self.event_router.dispatch(EventType.JD_REPLACED)
         return self.get_jd(new_id)
 
     @storage_errors
@@ -106,3 +113,9 @@ class JDService:
                 row["importance"].append(item["importance"])
                 row["required_levels"].append(item["required_level"])
         return summary
+
+    @storage_errors
+    def get_active_jd_requirements(self):
+        """Formal Phase 3 requirements, including evidence and deterministic ordering."""
+        from core.requirement_aggregation import aggregate_requirements
+        return aggregate_requirements(self.repo.get_active_jds())

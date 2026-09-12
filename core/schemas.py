@@ -87,7 +87,7 @@ class PlanningSnapshot:
     trigger: str
     active_jds_json: list[Any]
     capability_state_json: list[Any]
-    priority_result_json: list[Any]
+    priority_result_json: dict[str, Any] | list[Any]
     selected_task_json: dict[str, Any] | None
     reason: str
 

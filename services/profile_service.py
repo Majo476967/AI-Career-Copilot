@@ -1,7 +1,7 @@
 """Persisted draft -> explicit human confirmation -> atomic Current State + event.
 
 Methods raise BusinessError (including ParseError/AnalysisError) with readable text.
-No UI, tasks, priority or planning is invoked.
+No UI or tasks; an optional injected router recomputes deterministic priority.
 """
 import hashlib
 import math
@@ -15,8 +15,9 @@ from tools.analysis_validation import validate_profile, quote_key
 
 
 class ProfileService:
-    def __init__(self, repository):
+    def __init__(self, repository, *, event_router=None):
         self.repo = repository
+        self.event_router = event_router
 
     @storage_errors
     def create_profile_draft(self, source, *, filename=None):
@@ -105,4 +106,6 @@ class ProfileService:
                 "draft_id": draft_id, "resume_version": draft["resume_version"],
                 "confirmed_profile": data, "planning_required": True}))
             self.repo.set_profile_draft_status(draft_id, "confirmed")
+            if self.event_router is not None:
+                self.event_router.dispatch(EventType.PROFILE_CONFIRMED)
         return {"draft_id": draft_id, "profile_id": 1, "status": "confirmed"}

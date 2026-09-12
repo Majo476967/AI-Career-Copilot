@@ -756,13 +756,16 @@ Required Level 与 Current Level 均采用 0～4 级，因此结果位于 0～1�
 
 表示短期提升可能性。
 
-V1.0 可以采用简单规则：
+Phase 3 冻结为基于 `next_gap_type` 的确定性规则：
 
 ```text
-高 = 1.0
-中 = 0.7
-低 = 0.4
+evidence_knowledge_verification = 1.0
+practice = 0.9
+experience = 0.6
+depth = 0.4
 ```
+
+这是 V1.0 heuristic / 产品假设，尚未经过实验验证，不由 LLM 自由打分。Level 0 的 verification 表示补充或核实能力证据，不等于断言用户需要从零学习。
 
 ---
 
@@ -799,6 +802,12 @@ V1.0 优先考虑：
 
 Evaluation 后可以调整。
 
+### 稳定排序与边界结果
+
+先过滤 `gap_severity <= 0`，再按 Score 降序；同分依次按 Gap Severity、Coverage、Importance 降序，最后按规范 Capability Name 字典序升序。计算和排序使用未舍入的有理数，输出数值转换为普通数字，避免浮点误差破坏同分规则。
+
+无正向 Gap 返回 `no_positive_gap`；无 Active JD 返回 `no_active_jd`；无 Confirmed Profile 返回 `no_confirmed_profile`；所有 Active JD 均无有效能力条目时返回 `no_valid_capabilities`；数据非法返回 `invalid_input`，不强行选出 Top Priority。
+
 ---
 
 # 16. Gap Type
@@ -827,6 +836,8 @@ depth
 ```text
 gap_type = practice
 ```
+
+Phase 3 输出 `next_gap_type`：current=0 且有正向 Gap 时为 `evidence_knowledge_verification`，current=1/2/3 分别为 practice/experience/depth；无正向 Gap 时为 null。Level 0 使用 0 参与 Evidence Gap 计算，但解释必须使用“当前缺少可验证证据”，不可描述为用户不会或很弱。
 
 Task Planner 应根据不同 Gap Type 生成不同任务。
 
@@ -1248,6 +1259,10 @@ selected_task_json
 reason
 created_at
 ```
+
+Phase 3 只重算 Gap / Priority，Snapshot 的 `selected_task_json` 必须为 JSON null，不创建任务。`priority_result_json` 保存结构化结果对象（status、requirements、gaps、ranked_priorities、top_priority、reason），便于回读；存储 DTO 同时兼容此前的数组格式。
+
+Phase 3 的 `EventRouter` 支持 PROFILE_CONFIRMED、JD_ADDED、JD_ARCHIVED、JD_REPLACED，直接分派到 Planning Service；非规划事件忽略。Profile/JD Service 可通过 `event_router` 参数显式接入，默认不接入以兼容 Phase 2 调用方。接入时状态、业务事件和 Snapshot 在同一事务中完成；不追加 REPLAN 事件，不调用 Task Planner。独立 dispatch 重算当前状态，不重放历史事件。
 
 每次重要 Replanning 应保存 Snapshot。
 
