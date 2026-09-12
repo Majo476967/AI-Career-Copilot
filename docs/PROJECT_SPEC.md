@@ -1308,6 +1308,51 @@ REPLAN
 
 以上为 Phase 1 Schema implementation clarification，不增加产品 Scope。
 
+## 25.9 profile_drafts
+
+`profile_drafts` 用于保存 Resume Analyzer 生成、但尚未经用户确认的 Profile Draft，以及确认或丢弃后的草稿状态。它是独立的暂存层，**Profile Draft 不属于 Current State**。
+
+其目的是实现 **Human-in-the-loop Profile Confirmation**：用户先查看、修改、确认 AI 解析结果，避免解析错误直接污染正式用户状态。创建或修改 Draft 不得直接覆盖 Current Profile、Capabilities 或 Evidence。
+
+表结构与当前 `storage/schema.sql` 一致：
+
+```sql
+CREATE TABLE IF NOT EXISTS profile_drafts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    resume_text TEXT NOT NULL,
+    resume_version TEXT NOT NULL,
+    draft_json TEXT NOT NULL CHECK (json_valid(draft_json)),
+    status TEXT NOT NULL CHECK (status IN ('draft', 'confirmed', 'discarded')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    confirmed_at TEXT
+);
+```
+
+字段说明：
+
+* `id`：自增草稿标识；
+* `resume_text`：解析得到的简历文本；
+* `resume_version`：简历文本版本标识，供确认后 Evidence 来源追溯和去重使用；
+* `draft_json`：合法 JSON 格式的 Profile / Capability Evidence 草稿；
+* `status`：`draft`、`confirmed` 或 `discarded`；
+* `created_at` / `updated_at`：草稿创建和更新时间，不能为空；
+* `confirmed_at`：确认时间，未确认时为空。
+
+只有用户明确确认后，才允许将该 Draft 的数据写入正式状态，并在同一事务内：
+
+1. 更新 `user_profile`；
+2. 保存或更新 `user_capabilities`；
+3. 添加 `capability_evidence`，对相同简历版本的同一条 Evidence 去重；
+4. 追加 `PROFILE_CONFIRMED` Event；
+5. 将 Draft 标记为 `confirmed` 并记录确认时间。
+
+上述写入成功时一起提交，失败时一起回滚。重复确认同一已确认 Draft 不重复写入 Evidence 或 Event，也不重新覆盖 Current Profile。
+
+Discard 将 Draft 标记为 `discarded`，此后不得再确认或修改；已确认 Draft 不能通过 discard 撤销正式状态。**Discard 后的 Draft 可以删除**，因为它不属于正式 Current State 或 append-only Event History。当前实现只标记 `discarded` 并保留记录，未自动执行物理删除；删除许可不要求本轮新增清理接口，也不得删除正式 Evidence 或 Events。
+
+本节仅同步已实现的 Draft 暂存与人工确认设计，属于实现说明，不属于 Scope Expansion。
+
 ---
 
 # 26. Parsing Layer

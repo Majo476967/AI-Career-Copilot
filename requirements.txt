@@ -5,3 +5,5 @@ langchain-openai==1.6.0
 openai==3.7.0
 python-dotenv==1.2.3
 # Phase 1 storage and tests use stdlib sqlite3 / unittest; no ORM or test package needed.
+pypdf==6.18.0
+python-docx==1.2.0

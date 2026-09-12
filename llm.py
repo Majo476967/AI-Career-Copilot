@@ -78,3 +78,17 @@ def generate_answer(prompt):
     if not response.choices or not response.choices[0].message.content:
         raise LLMRequestError("豆包 API 未返回有效文本。")
     return response.choices[0].message.content
+
+
+def request_analysis(system_prompt, input_text):
+    """Analysis text response; JSON validation stays in the analyzer layer."""
+    from openai import APIError
+    from core.errors import AnalysisError
+    try:
+        response = get_chat_model(temperature=0).invoke([
+            ("system", system_prompt), ("user", input_text)])
+    except (APIError, LLMConfigurationError, LLMRequestError):
+        raise AnalysisError("llm_error", "豆包分析请求失败，请检查配置或稍后重试。") from None
+    if not isinstance(response.content, str) or not response.content.strip():
+        raise AnalysisError("empty_response", "豆包未返回有效的分析文本，请重试。")
+    return response.content

@@ -220,6 +220,46 @@ class Repository:
         return self.connection.execute("""SELECT 1 FROM events
             WHERE json_extract(payload_json, '$.migration.import_key')=?""", (key,)).fetchone() is not None
 
+    def create_profile_draft(self, resume_text, resume_version, draft_json):
+        now = utc_now()
+        cursor = self.connection.execute("""INSERT INTO profile_drafts
+            (resume_text, resume_version, draft_json, status, created_at, updated_at)
+            VALUES (?, ?, ?, 'draft', ?, ?)""",
+            (resume_text, resume_version, encode(draft_json), now, now))
+        return cursor.lastrowid
+
+    def get_profile_draft(self, draft_id):
+        return row_dict(self.connection.execute(
+            "SELECT * FROM profile_drafts WHERE id=?", (draft_id,)).fetchone())
+
+    def update_profile_draft(self, draft_id, draft_json):
+        self.connection.execute("""UPDATE profile_drafts SET draft_json=?, updated_at=?
+            WHERE id=? AND status='draft'""", (encode(draft_json), utc_now(), draft_id))
+
+    def set_profile_draft_status(self, draft_id, status):
+        if status not in {"confirmed", "discarded"}:
+            raise ValueError("Draft status must be confirmed or discarded")
+        now = utc_now()
+        self.connection.execute("""UPDATE profile_drafts SET status=?, updated_at=?, confirmed_at=?
+            WHERE id=? AND status='draft'""",
+            (status, now, now if status == "confirmed" else None, draft_id))
+
+    def add_evidence_if_new(self, evidence: Evidence):
+        """Call within a transaction to deduplicate confirmation of the same resume version."""
+        existing = self.connection.execute("""SELECT id FROM capability_evidence
+            WHERE capability_id=? AND evidence_type=? AND content=? AND source=? AND source_id IS ?""",
+            (evidence.capability_id, evidence.evidence_type, evidence.content,
+             evidence.source, evidence.source_id)).fetchone()
+        return existing["id"] if existing else self.add_evidence(evidence)
+
+    def list_jds(self, status=None):
+        if status is None:
+            rows = self.connection.execute("SELECT * FROM target_jds ORDER BY id")
+        else:
+            rows = self.connection.execute("SELECT * FROM target_jds WHERE status=? ORDER BY id",
+                                           (JDStatus(status).value,))
+        return [row_dict(row) for row in rows]
+
     @staticmethod
     def _limit(limit):
         if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:

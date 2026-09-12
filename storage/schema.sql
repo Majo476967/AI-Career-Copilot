@@ -93,3 +93,15 @@ CREATE TRIGGER IF NOT EXISTS events_no_update BEFORE UPDATE ON events
 BEGIN SELECT RAISE(ABORT, 'events are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS events_no_delete BEFORE DELETE ON events
 BEGIN SELECT RAISE(ABORT, 'events are append-only'); END;
+
+-- Independent staging; never treated as confirmed Current State.
+CREATE TABLE IF NOT EXISTS profile_drafts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    resume_text TEXT NOT NULL,
+    resume_version TEXT NOT NULL,
+    draft_json TEXT NOT NULL CHECK (json_valid(draft_json)),
+    status TEXT NOT NULL CHECK (status IN ('draft', 'confirmed', 'discarded')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    confirmed_at TEXT
+);
