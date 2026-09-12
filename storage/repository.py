@@ -133,11 +133,11 @@ class Repository:
         now = None if legacy_unknown_time else utc_now()
         cursor = self.connection.execute("""
             INSERT INTO tasks(capability, task_text, task_key, reason, estimated_time,
-              acceptance_criteria_json, status, created_at, completed_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+              acceptance_criteria_json, status, created_at, completed_at, gap_type, target_level)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (nonempty(task.capability, "capability"), text, normalize_task(text), task.reason,
               task.estimated_time, encode(task.acceptance_criteria_json), status.value, now,
-              now if status == TaskStatus.COMPLETED else None))
+              now if status == TaskStatus.COMPLETED else None, task.gap_type, task.target_level))
         return cursor.lastrowid
 
     def get_task(self, task_id):
@@ -259,6 +259,61 @@ class Repository:
             rows = self.connection.execute("SELECT * FROM target_jds WHERE status=? ORDER BY id",
                                            (JDStatus(status).value,))
         return [row_dict(row) for row in rows]
+
+    def latest_event(self, event_type):
+        return row_dict(self.connection.execute(
+            "SELECT * FROM events WHERE event_type=? ORDER BY id DESC LIMIT 1",
+            (EventType(event_type).value,)).fetchone())
+
+    def open_profile_drafts(self, limit=20):
+        return [row_dict(r) for r in self.connection.execute(
+            "SELECT * FROM profile_drafts WHERE status='draft' ORDER BY id DESC LIMIT ?", (self._limit(limit),))]
+
+    def progression_tasks(self, capability, target_level, gap_type, limit):
+        """One evidence-backed completed task per normalized key, bounded by threshold."""
+        return [row_dict(r) for r in self.connection.execute(
+            "SELECT MIN(t.id) AS id, t.task_key FROM tasks t "
+            "WHERE t.capability=? AND t.status='completed' AND t.target_level=? AND t.gap_type=? "
+            "AND EXISTS (SELECT 1 FROM events e WHERE e.event_type='TASK_COMPLETED' "
+            "AND e.entity_type='task' AND e.entity_id=CAST(t.id AS TEXT)) "
+            "AND EXISTS (SELECT 1 FROM capability_evidence ce JOIN user_capabilities c ON c.id=ce.capability_id "
+            "WHERE c.capability_name=t.capability AND ce.source='task' AND ce.source_id=CAST(t.id AS TEXT) "
+            "AND ce.evidence_type='task_result') "
+            "GROUP BY t.task_key ORDER BY MIN(t.id) LIMIT ?",
+            (capability, target_level, gap_type, self._limit(limit)))]
+
+    def pending_tasks(self):
+        return [row_dict(r) for r in self.connection.execute(
+            "SELECT * FROM tasks WHERE status='pending' ORDER BY id DESC")]
+
+    def recent_terminal_tasks(self, capability, limit=5):
+        return [row_dict(r) for r in self.connection.execute(
+            "SELECT * FROM tasks WHERE capability=? AND status IN "
+            "('completed','partial','not_completed') ORDER BY COALESCE("
+            "(SELECT MAX(e.id) FROM events e WHERE e.entity_type='task' AND e.entity_id=CAST(tasks.id AS TEXT) "
+            "AND e.event_type IN ('TASK_COMPLETED','TASK_PARTIAL','TASK_NOT_COMPLETED')), 0) DESC, id DESC LIMIT ?",
+            (capability, self._limit(limit)))]
+
+    def task_creation_event(self, task_id):
+        return row_dict(self.connection.execute(
+            "SELECT * FROM events WHERE event_type='TASK_CREATED' AND entity_type='task' "
+            "AND entity_id=? ORDER BY id DESC LIMIT 1", (str(task_id),)).fetchone())
+
+    def event_head(self):
+        return self.connection.execute("SELECT COALESCE(MAX(id), 0) FROM events").fetchone()[0]
+
+    def capability_events(self, capability, *, after_id=0, limit=5, newest=True, feedback_only=False):
+        # Filtering and LIMIT happen in SQL, never after loading the full history.
+        types = "('TASK_COMPLETED','TASK_PARTIAL','TASK_NOT_COMPLETED')" if feedback_only else (
+            "('TASK_CREATED','TASK_COMPLETED','TASK_PARTIAL','TASK_NOT_COMPLETED')")
+        order = "DESC" if newest else "ASC"
+        rows = self.connection.execute(
+            "SELECT e.* FROM events e WHERE e.id>? AND e.event_type IN " + types +
+            " AND (json_extract(e.payload_json, '$.capability')=? OR EXISTS "
+            "(SELECT 1 FROM tasks t WHERE e.entity_type='task' AND e.entity_id=CAST(t.id AS TEXT) "
+            "AND t.capability=?)) ORDER BY e.id " + order + " LIMIT ?",
+            (after_id, capability, capability, self._limit(limit)))
+        return [row_dict(r) for r in rows]
 
     @staticmethod
     def _limit(limit):

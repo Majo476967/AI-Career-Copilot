@@ -48,6 +48,14 @@ CREATE TABLE IF NOT EXISTS tasks (
         ('pending', 'completed', 'partial', 'not_completed', 'superseded')),
     created_at TEXT, -- NULL for imported history with unknown creation time.
     completed_at TEXT,
+    gap_type TEXT,
+    target_level INTEGER CHECK (
+        (gap_type IS NULL AND target_level IS NULL) OR
+        (gap_type IS NOT NULL AND target_level IS NOT NULL AND typeof(target_level) = 'integer' AND
+         ((gap_type = 'evidence_knowledge_verification' AND target_level = 1) OR
+          (gap_type = 'practice' AND target_level = 2) OR
+          (gap_type = 'experience' AND target_level = 3) OR
+          (gap_type = 'depth' AND target_level = 4)))),
     CHECK (status = 'completed' OR completed_at IS NULL)
 );
 CREATE TABLE IF NOT EXISTS planning_snapshots (
@@ -64,7 +72,7 @@ CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     event_type TEXT NOT NULL CHECK (event_type IN
         ('TASK_CREATED', 'TASK_COMPLETED', 'TASK_PARTIAL', 'TASK_NOT_COMPLETED',
-         'JD_ADDED', 'JD_ARCHIVED', 'JD_REPLACED', 'PROFILE_CONFIRMED', 'REPLAN')),
+         'JD_ADDED', 'JD_ARCHIVED', 'JD_REPLACED', 'PROFILE_CONFIRMED', 'CAPABILITY_LEVEL_CHANGED', 'REPLAN')),
     entity_type TEXT NOT NULL CHECK (length(trim(entity_type)) > 0),
     entity_id TEXT NOT NULL CHECK (length(trim(entity_id)) > 0),
     payload_json TEXT NOT NULL CHECK (json_valid(payload_json)),

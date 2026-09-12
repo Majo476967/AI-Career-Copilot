@@ -106,6 +106,8 @@ class ProfileService:
                 "draft_id": draft_id, "resume_version": draft["resume_version"],
                 "confirmed_profile": data, "planning_required": True}))
             self.repo.set_profile_draft_status(draft_id, "confirmed")
-            if self.event_router is not None:
+            if self.event_router is not None and not self.event_router.defer_until_commit:
                 self.event_router.dispatch(EventType.PROFILE_CONFIRMED)
+        if self.event_router is not None and self.event_router.defer_until_commit:
+            self.event_router.dispatch(EventType.PROFILE_CONFIRMED)
         return {"draft_id": draft_id, "profile_id": 1, "status": "confirmed"}

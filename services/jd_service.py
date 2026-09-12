@@ -5,6 +5,7 @@ from core.schemas import Event, EventType, TargetJD
 from parsers.jd_parser import parse_jd_file, parse_jd_text
 from services.common import storage_errors
 from tools.jd_analyzer import analyze_jd_text
+from tools.analysis_validation import validate_jd
 
 
 def input_key(text):
@@ -38,16 +39,42 @@ class JDService:
         return data
 
     @storage_errors
-    def add_jd(self, text=None, *, file=None, filename=None, company=None, job_title=None):
+    def preview_jd(self, text=None, *, file=None, filename=None):
+        """Analyze without persistence; the UI keeps this transient preview until confirmation."""
         text = self._input(text, file, filename)
         self._check_duplicate(text)
-        data = self._analyze(text, company, job_title)
+        return {"text": text, "analysis": self._analyze(text, None, None)}
+
+    def _prepared(self, prepared, company, job_title):
+        if not isinstance(prepared, dict):
+            raise BusinessError("invalid_preview", "岗位预览无效，请重新分析。")
+        text = parse_jd_text(prepared.get("text"))
+        data = validate_jd(prepared.get("analysis"), text)
+        for field, value in (("company", company), ("job_title", job_title)):
+            if value is not None:
+                if not isinstance(value, str):
+                    raise BusinessError("invalid_jd_label", "公司和岗位名称必须是文本。")
+                data[field] = value.strip()
+        return text, data
+
+    @storage_errors
+    def add_jd(self, text=None, *, file=None, filename=None, company=None, job_title=None, prepared=None):
+        if prepared is not None:
+            if text is not None or file is not None:
+                raise BusinessError("jd_input", "确认预览时不能同时提供另一份输入。")
+            text, data = self._prepared(prepared, company, job_title)
+        else:
+            text = self._input(text, file, filename)
+            self._check_duplicate(text)
+            data = self._analyze(text, company, job_title)
         with self.repo.transaction():
             self._check_duplicate(text)
             jd_id = self.repo.add_jd(TargetJD(data["company"], data["job_title"], text, data))
             self.repo.append_event(Event(EventType.JD_ADDED, "jd", str(jd_id), {"planning_required": True}))
-            if self.event_router is not None:
+            if self.event_router is not None and not self.event_router.defer_until_commit:
                 self.event_router.dispatch(EventType.JD_ADDED)
+        if self.event_router is not None and self.event_router.defer_until_commit:
+            self.event_router.dispatch(EventType.JD_ADDED)
         return self.get_jd(jd_id)
 
     @storage_errors
@@ -72,19 +99,26 @@ class JDService:
             if old["status"] == "active":
                 self.repo.archive_jd(jd_id)
                 self.repo.append_event(Event(EventType.JD_ARCHIVED, "jd", str(jd_id), {"planning_required": True}))
-                if self.event_router is not None:
+                if self.event_router is not None and not self.event_router.defer_until_commit:
                     self.event_router.dispatch(EventType.JD_ARCHIVED)
             # Already archived: idempotent success, no duplicate event.
+        if old["status"] == "active" and self.event_router is not None and self.event_router.defer_until_commit:
+            self.event_router.dispatch(EventType.JD_ARCHIVED)
         return self.get_jd(jd_id)
 
     @storage_errors
-    def replace_jd(self, old_jd_id, text=None, *, file=None, filename=None, company=None, job_title=None):
+    def replace_jd(self, old_jd_id, text=None, *, file=None, filename=None, company=None, job_title=None, prepared=None):
         old = self.get_jd(old_jd_id)
         if old["status"] != "active":
             raise BusinessError("jd_not_active", "只能替换 Active JD；该岗位已经归档。")
-        text = self._input(text, file, filename)
-        self._check_duplicate(text)
-        data = self._analyze(text, company, job_title)
+        if prepared is not None:
+            if text is not None or file is not None:
+                raise BusinessError("jd_input", "确认预览时不能同时提供另一份输入。")
+            text, data = self._prepared(prepared, company, job_title)
+        else:
+            text = self._input(text, file, filename)
+            self._check_duplicate(text)
+            data = self._analyze(text, company, job_title)
         with self.repo.transaction():
             if self.get_jd(old_jd_id)["status"] != "active":
                 raise BusinessError("jd_not_active", "该岗位状态已改变，请重新读取。")
@@ -93,8 +127,10 @@ class JDService:
             new_id = self.repo.add_jd(TargetJD(data["company"], data["job_title"], text, data))
             self.repo.append_event(Event(EventType.JD_REPLACED, "jd", str(new_id), {
                 "old_jd_id": old_jd_id, "new_jd_id": new_id, "planning_required": True}))
-            if self.event_router is not None:
+            if self.event_router is not None and not self.event_router.defer_until_commit:
                 self.event_router.dispatch(EventType.JD_REPLACED)
+        if self.event_router is not None and self.event_router.defer_until_commit:
+            self.event_router.dispatch(EventType.JD_REPLACED)
         return self.get_jd(new_id)
 
     @storage_errors

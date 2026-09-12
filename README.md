@@ -1,5 +1,26 @@
 # AI Career Copilot
 
+## V1.0 本地产品入口（Phase 5）
+
+使用 Python 3.10，安装 `requirements.txt`，在本地 `.env` 配置豆包 Ark 后运行：
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+streamlit run app.py
+```
+
+四个页面：首页、我的档案、目标岗位、进度与历史。SQLite 是状态来源；页面刷新不自动调用模型。
+简历先生成待确认草稿，岗位先预览再加入；后续任务和反馈调用已验证的 Service 闭环。
+默认数据保存在 `runtime/career_copilot.sqlite3`，可用 `CAREER_COPILOT_DB` 环境变量选择独立演示数据库。
+
+[手工 Smoke Test 与虚构演示文件](docs/MANUAL_SMOKE_TEST.md)。自动测试不消耗真实 API。
+项目规格以 [PROJECT_SPEC.md](docs/PROJECT_SPEC.md) 为准。
+
+---
+
+以下内容保留为 V0.x 历史设计与实验记录，不代表 V1.0 当前架构或已完成 Evaluation。
+
+
 AI Career Copilot 是一个面向求职用户的 AI 求职智能体。
 
 它的核心目标不是一次性回答“我该学什么”，而是结合用户目标岗位、当前能力、历史任务状态和执行反馈，持续判断用户当前最值得完成的下一项求职任务。

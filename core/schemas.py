@@ -35,6 +35,7 @@ class EventType(str, Enum):
     JD_ARCHIVED = "JD_ARCHIVED"
     JD_REPLACED = "JD_REPLACED"
     PROFILE_CONFIRMED = "PROFILE_CONFIRMED"
+    CAPABILITY_LEVEL_CHANGED = "CAPABILITY_LEVEL_CHANGED"
     REPLAN = "REPLAN"
 
 
@@ -80,6 +81,8 @@ class Task:
     estimated_time: str = "unknown"
     acceptance_criteria_json: list[str] = field(default_factory=list)
     status: TaskStatus = TaskStatus.PENDING
+    gap_type: str | None = None
+    target_level: int | None = None
 
 
 @dataclass

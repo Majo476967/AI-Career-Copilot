@@ -1209,6 +1209,8 @@ id
 capability
 task_text
 task_key
+gap_type
+target_level
 reason
 estimated_time
 acceptance_criteria_json
@@ -1308,6 +1310,7 @@ JD_ADDED
 JD_ARCHIVED
 JD_REPLACED
 PROFILE_CONFIRMED
+CAPABILITY_LEVEL_CHANGED
 REPLAN
 ```
 
@@ -2416,3 +2419,41 @@ V1.0 Freeze
 除 Bug 修复、Evaluation 发现的问题以及本文档明确要求的功能外：
 
 > **V1.0 开发期间不新增 Scope。**
+
+
+# Phase 4 实现约定：持续任务闭环
+
+以下是第 17～23、43 节的实施细化，不增加产品 Scope。
+
+* `PlanningService(repo)` 保留 Phase 3 Priority-only 契约；`PlanningService(repo, enable_tasks=True)` 启用 Phase 4 闭环，可注入 Fake Planner / Memory Service。`TaskService` 的反馈入口默认启用完整闭环。Router 在完整模式下增加三种 Task Feedback Event，REPLAN 不递归触发。
+* 完整模式先提交 Profile/JD 或 Task Feedback 的真实业务事务，再进行摘要与任务生成；不在 LLM 调用期间持有写事务。Phase 3 模式仍保持原来的状态、事件、无任务快照事务。Task Feedback 的状态、Event、Evidence 原子保存；后续失败不回滚反馈，记录 `REPLAN` 的 `status=planning_failed` 和 `needs_retry=true`，允许重新调用 Planning Service。若数据库本身不可写，返回重试状态并说明记录失败。
+* Phase 4 单次反馈新增 Evidence，不直接升降级；累计自报完成只允许按下文 Capability Progression 规则进行 0→1 / 1→2 升级。Evidence 明确记录用户报告的状态和原始反馈，不把自报完成等同于外部验收，不推断未说明的卡点。重复终态反馈明确拒绝，不重复追加 Event。
+* pending 任务保留条件：能力仍为 Top Priority、创建时的 Current Level / next_gap_type 与当前一致、时长仍符合预算、创建后没有新的同能力任务反馈。旧任务缺少创建依据时保守替换。Task 创建依据保留于 TASK_CREATED payload，并将 gap_type / target_level 持久化至 tasks 列。替换动作与新任务、TASK_CREATED、REPLAN、Snapshot 原子保存；生成失败保持原记录，并标记需要重试。调用 LLM 后重新核对状态，状态已变化则拒绝提交过时结果。
+* 任务时长采用可解析的分钟/小时文本，输出规范为 `N min`。默认单任务预算 60 分钟，用户有每日时间时使用该预算，上限 240 分钟；低于 5 分钟时返回 `no_time_budget`。这些是 V1.0 heuristic，不能声称经过实验验证。
+* Python 拒绝与最近 5 条同能力终态任务（按反馈事件先后，旧迁移无事件时回退到任务 ID）或现存 pending 任务规范化后完全相同的生成结果；更早历史不形成永久禁用。语义重复、具体性及 next_gap_type 的语义匹配由 Planner Prompt 约束，后续 Evaluation 验证；不声称 Python 已证明语义正确。
+* Memory 通过 SQLite 按 Capability 条件查询。Context 最多 5 条相关 Task Event，另取最新相关 Feedback；只使用 Active JD 的当前能力要求、该能力 State / Summary，不拼入无关能力或归档 JD。Summary 仅压缩 Task 创建及反馈事件，不作为事实升级依据。
+* `core/config.py` 冻结字符预算：Feedback 800、Summary 1200、单条 History 600、Planner 总输入（system + user）12000；History 最多 5 条。Summary 阈值 10 个未覆盖相关事件，一次最多 20 条，总摘要输入 16000 字符。上述阈值均为 V1.0 heuristic。
+* Context 先限制各字段，再按预算裁剪较旧 History、JD 摘要与 Summary，保持结构化 JSON；关键方向/等级/时间预算不丢弃，若仍超预算则明确失败。只截断入模副本，数据库原始文本不改写。Summary 使用旧摘要加水位之后的有界事件批次；成功后才推进至本批最后事件 ID，失败不推进，支持后续重试。
+* 完整 Snapshot 的 selected_task 保存实际新建或保留任务；无 Top Priority / 时间预算时为 null。REPLAN 保存保留/替换理由与任务 ID；不生成假任务。
+
+
+## Phase 4 收尾：保守 Capability Progression
+
+* Task 新增 nullable `gap_type`、`target_level`。Python 按创建时 Current Level 推导下一阶段：0→evidence_knowledge_verification/1，1→practice/2，2→experience/3，3→depth/4；LLM 不决定阶段。两列必须同时为空或为上述匹配组合。旧任务保留 NULL，不根据文本或现等级猜测历史阶段，不计入升级。
+* `KNOWLEDGE_PROMOTION_COMPLETIONS=2`：Level 0 累计至少两个同能力、不同 normalized task_key、target_level=1、gap_type=evidence_knowledge_verification 的 completed Task，允许 0→1。
+* `PRACTICE_PROMOTION_COMPLETIONS=2`：Level 1 累计至少两个同能力、不同 normalized task_key、target_level=2、gap_type=practice 的 completed Task，允许 1→2。
+* 有效计数还须有关联 TASK_COMPLETED Event 与 task_result Evidence；同一 task_id / task_key 只计一次。单次检查最多升一级，单个 completed 不升级。阈值统一配置于 core/config.py，是 V1.0 heuristic，后续需 Evaluation / 真实用户验证。
+* Level 0 仍表示 unknown evidence。升级依据是 self-reported completion evidence；解释为“根据用户报告的任务完成情况，当前积累了足够的阶段性能力 Evidence”，不得称为系统已验证完全掌握或客观考试认证。
+* 普通 Task 禁止自动 2→3 / 3→4。Experience / Depth 需要真实项目、实习或用户确认的真实业务经历等更强证据；本轮不增加相关 UI。partial / not_completed 不自动降级，只保留反馈和 Evidence。
+* completed 顺序：更新 Task → TASK_COMPLETED → Evidence → 检查 Progression → 必要时更新 user_capabilities 并追加 CAPABILITY_LEVEL_CHANGED；以上处于同一事务。提交后再 Summary / Priority Recompute / Task Validation / Replanning，Priority 使用新等级。
+* CAPABILITY_LEVEL_CHANGED payload 保存 capability、previous_level、new_level、evidence_task_ids、reason、created_at，并说明 self-reported 来源。此事件用于追溯；本反馈链路只在事务提交后统一重算一次，不在事务内重复路由。
+* SQLite 初始化对旧库幂等迁移，保留 Task/Event ID、原始事件、摘要水位和 append-only 保护。旧 Task 两列保持 NULL；只迁移存储结构，不触发历史批量升级。
+
+
+## Phase 5 UI 实现同步
+
+* `streamlit run app.py` 启动四页中文本地产品：首页、我的档案、目标岗位、进度与历史。`ui/adapter.py` 仅组织只读展示和 Service 调用，不复制 Gap / Priority / Memory 算法。
+* Dashboard 通过只读 `PlanningService.get_priority()` 读取当前结果；刷新、导航不生成任务、不追加 Snapshot、不调用 LLM。实际业务操作通过显式按钮触发完整后端闭环。
+* Profile Draft 保存在 SQLite，未确认前不显示为正式档案；支持表单修改、确认、放弃和重新上传，证据只读。岗位通过 `JDService.preview_jd()` 预览，确认时复验并使用已解析结果，不再次请求分析模型；预览保存在当前会话，尚不属于 Active JD。
+* SQLite 仍为 Source of Truth。Session State 仅保存控件、岗位预览和已成功动作的结果，结合任务/草稿 ID、输入指纹以及后端事务与重复校验防止 rerun 重复操作。画像草稿和正式状态可在重启后恢复，未确认岗位预览无需持久化。
+* 新增 Streamlit 依赖；不引入独立 Web 后端、登录或新的 AI 能力。`CAREER_COPILOT_DB` 可选择本地演示/测试数据库；虚构文件见 demo/，真实模型 Smoke Test 仅手动执行。

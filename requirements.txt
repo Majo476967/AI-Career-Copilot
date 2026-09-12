@@ -7,3 +7,6 @@ python-dotenv==1.2.3
 # Phase 1 storage and tests use stdlib sqlite3 / unittest; no ORM or test package needed.
 pypdf==6.18.0
 python-docx==1.2.0
+
+# Phase 5 local product UI (Python 3.10 compatible).
+streamlit==1.63.0
