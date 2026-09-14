@@ -6,6 +6,7 @@ No UI or tasks; an optional injected router recomputes deterministic priority.
 import hashlib
 import math
 from core.errors import BusinessError
+from core.capabilities import normalize_capability
 from core.schemas import Capability, CapabilityLevel, Event, EventType, Evidence, UserProfile
 from parsers.resume_parser import parse_resume
 from services.common import storage_errors
@@ -22,7 +23,7 @@ class ProfileService:
     @storage_errors
     def create_profile_draft(self, source, *, filename=None):
         resume_text = parse_resume(source, filename=filename)
-        data = validate_profile(analyze_resume(resume_text), resume_text)
+        data = validate_profile(analyze_resume(resume_text, allow_incomplete=True), resume_text, allow_incomplete=True)
         current = self.repo.get_profile() or {}
         data.update({key: current.get(key, default) for key, default in
                      (("major", ""), ("target_direction", ""), ("available_hours_per_day", None))})
@@ -44,8 +45,8 @@ class ProfileService:
         return draft
 
     @staticmethod
-    def _validate_edited(data, resume_text):
-        cleaned = validate_profile(data, resume_text, human_edited=True)
+    def _validate_edited(data, resume_text, *, allow_incomplete=False):
+        cleaned = validate_profile(data, resume_text, human_edited=True, allow_incomplete=allow_incomplete)
         for field in ("major", "target_direction"):
             if not isinstance(data.get(field, ""), str):
                 raise BusinessError("invalid_profile", f"{field} 必须是文本。")
@@ -66,6 +67,38 @@ class ProfileService:
         with self.repo.transaction():
             draft = self._editable(draft_id)
             data = self._validate_edited({**draft["draft_json"], **changes}, draft["resume_text"])
+            self.repo.update_profile_draft(draft_id, data)
+        return self.get_profile_draft(draft_id)
+
+    @storage_errors
+    def review_profile_draft(self, draft_id):
+        """Read-only validation projection, including legacy drafts without metadata."""
+        draft = self.get_profile_draft(draft_id)
+        return self._validate_edited(draft["draft_json"], draft["resume_text"], allow_incomplete=True)
+
+    @storage_errors
+    def resolve_missing_capability(self, draft_id, canonical_name, action, *, level=None, evidence_snippet=None):
+        """Explicit user action; only updates this editable draft, never Current State."""
+        with self.repo.transaction():
+            draft = self._editable(draft_id)
+            data = self._validate_edited(draft["draft_json"], draft["resume_text"], allow_incomplete=True)
+            name = normalize_capability(canonical_name)
+            missing = next((m for m in data["missing_capabilities"] if m["canonical_name"] == name), None)
+            if missing is None:
+                raise BusinessError("missing_capability_changed", "该能力已处理或不在待补全列表，请刷新草稿。")
+            if action == "ignore":
+                data["ignored_missing_capabilities"].append(name)
+            elif action == "add":
+                if type(level) is not int or not 0 <= level <= 4:
+                    raise BusinessError("level_required", "请由你选择能力等级（0～4），系统不会代选。")
+                if evidence_snippet not in missing["evidence_snippets"]:
+                    raise BusinessError("invalid_resume_evidence", "请选择检测到的简历原文作为证据。")
+                data["capabilities"].append({"name": name, "raw_names": missing["matched_resume_terms"],
+                    "level": level, "evidence": [{"source": "resume", "evidence_type": "user_confirmed_resume_evidence",
+                                                "content": evidence_snippet}]})
+            else:
+                raise BusinessError("invalid_recovery_action", "请选择添加到草稿或不纳入。")
+            data = self._validate_edited(data, draft["resume_text"], allow_incomplete=True)
             self.repo.update_profile_draft(draft_id, data)
         return self.get_profile_draft(draft_id)
 

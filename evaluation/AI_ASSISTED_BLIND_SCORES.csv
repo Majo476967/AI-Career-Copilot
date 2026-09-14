@@ -1,0 +1,17 @@
+﻿case_id,scenario_type,A_actionability,A_reasonableness,A_replanning,A_constraint_violation,A_notes,B_actionability,B_reasonableness,B_replanning,B_constraint_violation,B_notes,preferred_output,reviewer,review_method,human_signoff
+C01,single_jd,2,5,N/A,Yes,任务过于抽象，验收条件未定义 Level 2 的具体内容,5,4,N/A,Yes,任务具体可执行，但 latest_feedback 实际为空却引用“最新反馈”,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C02,single_jd,3,4,N/A,No,正确将 Level 0 按证据不足处理，但 3 篇文档/30 分钟略紧，且外部文档未必能定义系统 Level 2,1,2,N/A,Yes,任务和验收均为循环定义，并无依据假设每提升一级需要10小时，且将未知证据直接等同需要提升,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C03,single_jd,1,3,N/A,Yes,Product Design 方向可以成立，但任务只是“升到 Level 3”的目标，30天估计无依据且验收依赖未定义等级,5,4,N/A,Yes,问卷任务具体可执行、验收明确，但 latest_feedback 为空却错误引用“最新反馈”,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C04,multi_jd,2,3,N/A,Yes,SQL方向可接受，但任务过于抽象；且错误声称所有5个Active JD都要求SQL，实际第5个不要求,5,4,N/A,Yes,任务具体、可验收且时间合理，但 latest_feedback 为空却引用“最新反馈”,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C05,multi_jd,4,5,N/A,No,正确识别SQL已无正向Gap，选择Agent并安排实际practice任务；Demo细节仍可更具体,1,3,N/A,Yes,Agent方向正确，但直接要求1→3且任务只是能力等级目标，并无依据估算30小时,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C06,multi_jd,1,3,N/A,Yes,Evaluation方向可以成立，但没有体现Multi-JD权衡；任务只是提升等级目标，并无依据估计20天,3,4,N/A,No,正确按practice阶段安排60分钟实际案例，但案例内容和Level 2标准仍不够具体,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C07,completed,4,5,5,No,正确推进到第2组练习，但验收标准略偏笼统,5,5,5,No,正确利用已完成历史，任务和代码正确性验收更明确,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C08,completed,2,4,5,Yes,正确停止继续SQL并切换Data Analysis，但任务过于泛化，20分钟与“达到Level 2”目标不匹配,5,5,5,No,正确利用当前状态退出已满足的SQL方向，转入具体的数据清洗practice任务，时间与验收清晰,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C09,partial,4,5,4,No,准确识别correlated subquery卡点，但仍包装在新的JOIN练习组中，针对性略弱,4,5,5,No,直接保留已完成JOIN事实，把下一步收缩到correlated subquery，并有代码和运行结果验收,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C10,partial,4,4,3,Yes,识别到参数校验卡点，但要求重新做第2组并再次包含已完成的工具定义,5,5,5,No,精准保留已完成部分，只针对参数校验卡点拆解任务,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C11,not_completed,3,5,5,No,正确响应任务过大和10分钟限制并缩小任务，但简化后的JOIN练习内容仍不够具体,4,3,2,Yes,虽然尊重10分钟限制，但基本原样重发此前因任务过大而未完成的第1组JOIN，没有真正拆小,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C12,not_completed,3,5,5,No,正确识别测试数据缺失并补前置任务，但没有定义样本数量和类型范围,4,5,5,No,准确针对未完成原因补建测试集，并明确10个样本和类型覆盖，仍可进一步定义具体类别,B,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C13,target_change,4,4,4,Yes,正确切换到当前Active Evaluation目标且任务可执行，但错误把SQL completed历史称为“最新反馈”依据,2,5,5,Yes,正确忽略archived SQL并切换Evaluation，但任务空泛且8小时违反每日1小时预算,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C14,target_change,5,4,5,No,正确从Agent历史切换到两个must-have岗位共同需要的Data Analysis，任务具体且符合实践阶段；理由可更明确比较岗位覆盖,2,4,5,Yes,目标切换和多JD判断正确，但任务退回泛化知识学习，验收仅为学习笔记，不符合当前实践Gap,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C15,long_history,4,5,5,No,正确忽略大量无关Product Design历史，使用最新SQL partial反馈转向窗口函数；验收较完整,4,5,5,No,同样正确聚焦最新相关SQL反馈，但验收标准略少于A,A,ChatGPT blind review,AI-assisted blind A/B scoring,pending
+C16,long_history,4,5,5,No,正确利用最新not_completed反馈，将大量JOIN历史压缩为当前唯一需要的一道GROUP BY任务；具体题目仍未定义,4,5,5,No,同样正确使用最新反馈并保持岗位方向，输出与A实质无明显质量差异,Tie,ChatGPT blind review,AI-assisted blind A/B scoring,pending

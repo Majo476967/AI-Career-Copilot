@@ -1,0 +1,433 @@
+{
+  "confidential": "仅组织者保管，完成全部评分后再解盲。",
+  "selection_policy": "按 RESULTS.md 的数据修正版本：C10/C12/C14 Run 2，C15 Run 3，其余 Run 1；每对使用相同 Run。不是新的独立 Run，不按输出质量挑选。",
+  "randomization": "SystemRandom balanced shuffle; A positions 8 per arm; assignment retained per case",
+  "rubric_sha256": "a93dd712d7e5dba83f4484c7dc000f116a0424c3967f6e1d3de297b8b98287ab",
+  "protected_file_hashes": {
+    "evaluation\\RUBRIC.md": "a93dd712d7e5dba83f4484c7dc000f116a0424c3967f6e1d3de297b8b98287ab",
+    "evaluation\\cases.json": "31ca1520a345c0a7eda72241fd0c54ca7245820b29a976433b7530e08447a4d2",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C01-baseline.json": "f4402ce7521cc31b0c1fde84f9a2b65f29b8ef4033773502080fa7005e623183",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C01-copilot.json": "99f4cf754aa873329aef8129f822379d0c5cf8c1084ada421092363e5a35f6d5",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C02-baseline.json": "b480c192918dfdbfcce60c702da238c4e52d95ebcc0ae0e665bf1829b9d05619",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C02-copilot.json": "13508b5f56af72e08bf03c3ff64e00f8fe3ee1e9f72beb0a5b30e3d2a9000296",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C03-baseline.json": "03877989303d7546b1891d85ed736ed9f3bbdb3c8e905cd8c9508d16cac39190",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C03-copilot.json": "0f9799ce655d0e94e99a265e8aa04014e0f257cdd6d27d45a44ea845e3d0df45",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C04-baseline.json": "d98c84907912568dadc8a7a2ec16c5d71181c07176e416d91eab594658bb577f",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C04-copilot.json": "50bef7fa4f19cdcce56cdeed734e92715baa172a121a27f2b16c9582c043775a",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C05-baseline.json": "c07d423fa7dbd9db12742185a0b197fc171f435aac916a98d32ed21e24eb50b9",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C05-copilot.json": "af9424b4932e356e6fcf3f87e66a0d2d21868d97e87006365fa9daa6c7073115",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C06-baseline.json": "dd27fb9dad83aa96e5b0a20906dcc6d7434058938a29f0546d94268b678d9121",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C06-copilot.json": "f43871ff09db3de81ab9b56f064a334cab2a19477adfd5875b1af77a98d132fd",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C07-baseline.json": "bb4dec923931ffe1b12a6994f6e9b5ddf2beba2177874ff7c6f1f830553be4aa",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C07-copilot.json": "07b74a222fafdb8f1028268c11abe5796452c2b745de5036e8ad172c53b26562",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C08-baseline.json": "43a8a36e27a399b15506c8eacad6d09d0be7132f733702b671d9a299c7cbe8dd",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C08-copilot.json": "7929f2f353ebb320ae41c56009e06c757fadda07859783f40ac5f15b7f182555",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C09-baseline.json": "42bf2dedb6db788d1f45066d760d165bf8c8ffd9dc78203f6b2b16a878d97d19",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C09-copilot.json": "0f3be23bdfa2c8fa66a42489391b184390adda807c753fc14b0817b07b2ee400",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C10-baseline.json": "036a1805bbfa05d1bb74556321fb2519c0e315262eae389965cb2501e9959924",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C10-copilot.json": "5197f0b12d864266c4e23026d42c96da93eabc76fa6aadc970e3d3227da5b96c",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C11-baseline.json": "5d4eb41bcf8cb14bea65820677c34fc955bd67a24f0d502d6112aff28b93b7e3",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C11-copilot.json": "2e9fc32b99e83a4db86d921b335cfca25c4f800c02515b238cbd9b4014314d98",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C12-baseline.json": "c517825c195d948cae318f7a12507246a946879a553081f6ae898ce295af066d",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C12-copilot.json": "ce7467de1d9cf89db39b9c32e2a09637d394696cf0b0b4a4ce965064422534a7",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C13-baseline.json": "d50792958254bb48df339a76e01e499747fa6cd1a9d95c0e101bd53e722f6394",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C13-copilot.json": "619ffabf39a9ff6e89c68267b413db8a6e76474474c88b562284c42775268986",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C14-baseline.json": "9c9d964d09019fb746703b39146652c3cd7523f97875b592e42c71d0397bf737",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C14-copilot.json": "fb5ec13856905c801724ea004eec2a113f61e54282e9f00862802990bb0803e1",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C15-baseline.json": "4c4b9e5d4e588ce7b2e288b5384e740660ed4f0d6b969efa9451cf6965a741ae",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C15-copilot.json": "19aa651464ee2bb760754f1248ac7fd4977420b093b06880c06975e661310c81",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C16-baseline.json": "c6d2f5480c36bdb7567ba3f80e2bf4b001f4290553db3382d2bf62f14115ca92",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\C16-copilot.json": "52bd325f14b946bdb0c391a151be8bf9e66bd4b98e678e49f574339107f7ccf1",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\human_scores.json": "ac26229be8de16a5cfeabe05d2ce5d5d3e18792296f0ea07790d3dec16598337",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\manifest.json": "87aa5200b9f66b054d5b6854b820be2cec4a36d0f4320e50124d80a8f7ec0cf7",
+    "evaluation\\results\\20260913T033148Z-a79c2e86\\summary.json": "a69203184317d775d24f4c55ab315f75c56e76bc462ae5ffcf4700c8fc0b4a4e",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C10-baseline.json": "806f16c250b95daa3d1a9409c665d1ddb73947d13e528f819a562d880311fd8c",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C10-copilot.json": "9aab46688eccd0e7d308a02b772e27b1ebe88770f1ecdfd850fffb1a7068967b",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C12-baseline.json": "54ea5f80b3e8345d3c19a6d7021e0a6dc800efe50f3757e88fe7fe6f2ac8446d",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C12-copilot.json": "0b0536ba3dd8bb845ce52ff26bdc599df18037b9d04b7fd1ac334a590fdffd94",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C14-baseline.json": "78f7e611546812fac1c1c921aa4f4cdf0793d9b0c83cee5b90c7a823694bdb00",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C14-copilot.json": "4dff8b64dbe296a64cc26e477eb06c87ce1b93cee13f488ea85dc68d044bb0a4",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C15-baseline.json": "52b4d53c05ff461f506f7435caae6443157ec281a43b17f09ca5ff74a355c86b",
+    "evaluation\\results\\20260913T033607Z-db115c43\\C15-copilot.json": "28414e778a6625d5460f5a9df7ff33ba457983f5a49b67aadebed4f4d4590637",
+    "evaluation\\results\\20260913T033607Z-db115c43\\human_scores.json": "254f64dd5bf46c047db1cc980ed17a3a03d5a29ddebaeef587493a1916084807",
+    "evaluation\\results\\20260913T033607Z-db115c43\\manifest.json": "395592a1ea7114e160c9e2f71cb2414f7a9a5001b217f1c3ebac1c8d096fb648",
+    "evaluation\\results\\20260913T033607Z-db115c43\\summary.json": "cf8a00ddec66ea124af660e33fc02124315c4b042f377f4021f590a90b6fd2e2",
+    "evaluation\\results\\20260913T034058Z-891cdbd3\\C15-baseline.json": "0da161ce34be36462adc4be6db59db98ec09296b4c629aeb123f836507199521",
+    "evaluation\\results\\20260913T034058Z-891cdbd3\\C15-copilot.json": "57c84e50ea6dffeb439067bdeb555be360254d6c7a54030e5798dda1412ad157",
+    "evaluation\\results\\20260913T034058Z-891cdbd3\\human_scores.json": "00c7311e418bbb18c6465d2bf4df0e206d7bebe96494ea85ef68dbb946422063",
+    "evaluation\\results\\20260913T034058Z-891cdbd3\\manifest.json": "5353b7104e00c68b48b7065ad2d898c151f2e5af334237b569e5950abcfbd7e2",
+    "evaluation\\results\\20260913T034058Z-891cdbd3\\summary.json": "33ebef2ae412715d7a6baf2168b32790dee6091052c5671e28fb160f455c9d5f"
+  },
+  "batches": [
+    [
+      "C01",
+      "C07",
+      "C10",
+      "C13"
+    ],
+    [
+      "C02",
+      "C04",
+      "C11",
+      "C15"
+    ],
+    [
+      "C03",
+      "C05",
+      "C09",
+      "C14"
+    ],
+    [
+      "C06",
+      "C08",
+      "C12",
+      "C16"
+    ]
+  ],
+  "cases": {
+    "C01": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "single_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C01-baseline.json",
+          "source_sha256": "f4402ce7521cc31b0c1fde84f9a2b65f29b8ef4033773502080fa7005e623183",
+          "raw_output_sha256": "6c751de6bc059c226d5bae1322633e1167a2721e22f1b2f5562006b193dddac0",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C01-copilot.json",
+          "source_sha256": "99f4cf754aa873329aef8129f822379d0c5cf8c1084ada421092363e5a35f6d5",
+          "raw_output_sha256": "963c07e5d2ab13861f07a136cd477cd2b3ac643c9b8edf2ce3ec4f7ac39e9f6f",
+          "redactions": []
+        }
+      }
+    },
+    "C02": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "single_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C02-copilot.json",
+          "source_sha256": "13508b5f56af72e08bf03c3ff64e00f8fe3ee1e9f72beb0a5b30e3d2a9000296",
+          "raw_output_sha256": "3dc3bec29c8a7d2c58d468594dc92710c28ae1567fa5fe3b775cfa8289c12275",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C02-baseline.json",
+          "source_sha256": "b480c192918dfdbfcce60c702da238c4e52d95ebcc0ae0e665bf1829b9d05619",
+          "raw_output_sha256": "e4b479e484d871d1c1efbf88d9b45067184c758d4dbcf399d9e1e2c89e7a8ca3",
+          "redactions": []
+        }
+      }
+    },
+    "C03": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "single_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C03-baseline.json",
+          "source_sha256": "03877989303d7546b1891d85ed736ed9f3bbdb3c8e905cd8c9508d16cac39190",
+          "raw_output_sha256": "ae17f1e64e769d6929d9646a3367a79c1c22cbcf0b56fe9ad6a6046529403dd4",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C03-copilot.json",
+          "source_sha256": "0f9799ce655d0e94e99a265e8aa04014e0f257cdd6d27d45a44ea845e3d0df45",
+          "raw_output_sha256": "cb823c24d3dbb4be47227f08e193c6e4ed8fb5fe037be608e0d314638ec5dd3b",
+          "redactions": []
+        }
+      }
+    },
+    "C04": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "multi_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C04-baseline.json",
+          "source_sha256": "d98c84907912568dadc8a7a2ec16c5d71181c07176e416d91eab594658bb577f",
+          "raw_output_sha256": "3b81d14aa215ff4496fee7ff862562bc9c95456344d669e2a7c805acb4cd2341",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C04-copilot.json",
+          "source_sha256": "50bef7fa4f19cdcce56cdeed734e92715baa172a121a27f2b16c9582c043775a",
+          "raw_output_sha256": "e5f3f4b70135ba16041f114ae8b6dc3e0740d074b26a46518b53c89372c65cb7",
+          "redactions": []
+        }
+      }
+    },
+    "C05": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "multi_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C05-copilot.json",
+          "source_sha256": "af9424b4932e356e6fcf3f87e66a0d2d21868d97e87006365fa9daa6c7073115",
+          "raw_output_sha256": "50fc9be8efb6b196d279b1d6058894b241293c89e029f4ace45d36ae646d11a6",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C05-baseline.json",
+          "source_sha256": "c07d423fa7dbd9db12742185a0b197fc171f435aac916a98d32ed21e24eb50b9",
+          "raw_output_sha256": "1d7dc55bb4430aa76c9969c3a976027d2f37fbd618c9e512da80d8ebb14324d2",
+          "redactions": []
+        }
+      }
+    },
+    "C06": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "multi_jd",
+      "replanning_applicable": false,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C06-baseline.json",
+          "source_sha256": "dd27fb9dad83aa96e5b0a20906dcc6d7434058938a29f0546d94268b678d9121",
+          "raw_output_sha256": "6cfcc84967d6ebf468af35c207a387ea6a6cbedb0318c1f0e2bbacbacdb8ed77",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C06-copilot.json",
+          "source_sha256": "f43871ff09db3de81ab9b56f064a334cab2a19477adfd5875b1af77a98d132fd",
+          "raw_output_sha256": "a3a7d140d71bdfde7fc76e68217e21f90cbe056052f8ae3540d9cd8c077c0193",
+          "redactions": []
+        }
+      }
+    },
+    "C07": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "completed",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C07-copilot.json",
+          "source_sha256": "07b74a222fafdb8f1028268c11abe5796452c2b745de5036e8ad172c53b26562",
+          "raw_output_sha256": "0fea35ca8369a8a15b2b9f252b440bc04ae7572d9d9b64b708b582cc85eb5029",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C07-baseline.json",
+          "source_sha256": "bb4dec923931ffe1b12a6994f6e9b5ddf2beba2177874ff7c6f1f830553be4aa",
+          "raw_output_sha256": "b76ad5b7b9aa6bbb67d7ed0307ec8e359e9bb4776af8c65d11e499172b905db7",
+          "redactions": []
+        }
+      }
+    },
+    "C08": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "completed",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C08-baseline.json",
+          "source_sha256": "43a8a36e27a399b15506c8eacad6d09d0be7132f733702b671d9a299c7cbe8dd",
+          "raw_output_sha256": "b457b2add3e1fca3afbc1c2bb0ddd925ab9c00644e077978454b21e2c0f65254",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C08-copilot.json",
+          "source_sha256": "7929f2f353ebb320ae41c56009e06c757fadda07859783f40ac5f15b7f182555",
+          "raw_output_sha256": "0996294a84fd62b28862c778ededbfc6f8f451d2ad378fe7d8f8febcd3f3d466",
+          "redactions": []
+        }
+      }
+    },
+    "C09": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "partial",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C09-copilot.json",
+          "source_sha256": "0f3be23bdfa2c8fa66a42489391b184390adda807c753fc14b0817b07b2ee400",
+          "raw_output_sha256": "e281f703afbcf685a268f3dec6d0eac1768bd64c637583b1a5f0338c9b333803",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C09-baseline.json",
+          "source_sha256": "42bf2dedb6db788d1f45066d760d165bf8c8ffd9dc78203f6b2b16a878d97d19",
+          "raw_output_sha256": "23efeaa0dca54584f76519a99a758e55fe91ec780b584fedfa7016307d7455ed",
+          "redactions": []
+        }
+      }
+    },
+    "C10": {
+      "run_id": "20260913T033607Z-db115c43",
+      "scenario_type": "partial",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C10-baseline.json",
+          "source_sha256": "806f16c250b95daa3d1a9409c665d1ddb73947d13e528f819a562d880311fd8c",
+          "raw_output_sha256": "5d604037ebb07c5cc65e0e32ebe959bf9c1ff7209565250525aa14740d89a0c2",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C10-copilot.json",
+          "source_sha256": "9aab46688eccd0e7d308a02b772e27b1ebe88770f1ecdfd850fffb1a7068967b",
+          "raw_output_sha256": "37de80f5c523c62329e55fe44e86be97e71d3324d2291d9944938a8cc84fd10f",
+          "redactions": []
+        }
+      }
+    },
+    "C11": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "not_completed",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C11-copilot.json",
+          "source_sha256": "2e9fc32b99e83a4db86d921b335cfca25c4f800c02515b238cbd9b4014314d98",
+          "raw_output_sha256": "e975da14abaa901aa888b422af851c224ad50d2ca09ed2610d3b746636bfb021",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C11-baseline.json",
+          "source_sha256": "5d4eb41bcf8cb14bea65820677c34fc955bd67a24f0d502d6112aff28b93b7e3",
+          "raw_output_sha256": "c9842e82f65ad737436f3e19fbf7b106c3aa4a796cd7f7b14028691699ecbb01",
+          "redactions": []
+        }
+      }
+    },
+    "C12": {
+      "run_id": "20260913T033607Z-db115c43",
+      "scenario_type": "not_completed",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C12-baseline.json",
+          "source_sha256": "54ea5f80b3e8345d3c19a6d7021e0a6dc800efe50f3757e88fe7fe6f2ac8446d",
+          "raw_output_sha256": "ef9d40e770ea156972bf2bfb4949966b6eebaf6de5ea64c32384336587b6b936",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C12-copilot.json",
+          "source_sha256": "0b0536ba3dd8bb845ce52ff26bdc599df18037b9d04b7fd1ac334a590fdffd94",
+          "raw_output_sha256": "2acaa24215431aa4d37b731c32e8b0bc681a681f10841782d69299d4ee9a8bd1",
+          "redactions": []
+        }
+      }
+    },
+    "C13": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "target_change",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C13-copilot.json",
+          "source_sha256": "619ffabf39a9ff6e89c68267b413db8a6e76474474c88b562284c42775268986",
+          "raw_output_sha256": "5d798067b53648717753e4661d358c8f83b0c4fa9215a6c597b2ebdcf8ded375",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C13-baseline.json",
+          "source_sha256": "d50792958254bb48df339a76e01e499747fa6cd1a9d95c0e101bd53e722f6394",
+          "raw_output_sha256": "457462966fe85f537007300c053d9a323b0e05645d4d34f06566bb66bd1bb3ed",
+          "redactions": []
+        }
+      }
+    },
+    "C14": {
+      "run_id": "20260913T033607Z-db115c43",
+      "scenario_type": "target_change",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C14-copilot.json",
+          "source_sha256": "4dff8b64dbe296a64cc26e477eb06c87ce1b93cee13f488ea85dc68d044bb0a4",
+          "raw_output_sha256": "c23aaeae25af40651112a7edb792c7a2932d839bd59bfac892dd4fb06fe89cc0",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033607Z-db115c43/C14-baseline.json",
+          "source_sha256": "78f7e611546812fac1c1c921aa4f4cdf0793d9b0c83cee5b90c7a823694bdb00",
+          "raw_output_sha256": "a660720c1dec18f462444a998fa32966f0a84fda53d532d4a2487be1c9598680",
+          "redactions": []
+        }
+      }
+    },
+    "C15": {
+      "run_id": "20260913T034058Z-891cdbd3",
+      "scenario_type": "long_history",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T034058Z-891cdbd3/C15-baseline.json",
+          "source_sha256": "0da161ce34be36462adc4be6db59db98ec09296b4c629aeb123f836507199521",
+          "raw_output_sha256": "ed535bd415dc44599f903143b7a46cc04f923845f6c44714b47ab438cb27c7f9",
+          "redactions": []
+        },
+        "B": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T034058Z-891cdbd3/C15-copilot.json",
+          "source_sha256": "57c84e50ea6dffeb439067bdeb555be360254d6c7a54030e5798dda1412ad157",
+          "raw_output_sha256": "e8b9d2ecfe6fc99ad6ef0fdc358884df0630a339b7d5bec48c0bf1b09a066d20",
+          "redactions": []
+        }
+      }
+    },
+    "C16": {
+      "run_id": "20260913T033148Z-a79c2e86",
+      "scenario_type": "long_history",
+      "replanning_applicable": true,
+      "assignments": {
+        "A": {
+          "arm": "copilot",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C16-copilot.json",
+          "source_sha256": "52bd325f14b946bdb0c391a151be8bf9e66bd4b98e678e49f574339107f7ccf1",
+          "raw_output_sha256": "14ce1db62eab8fd5dcc8f273ab6f3076b98b6a62e7ea22940d74afffaa43b99e",
+          "redactions": []
+        },
+        "B": {
+          "arm": "baseline",
+          "source_file": "evaluation/results/20260913T033148Z-a79c2e86/C16-baseline.json",
+          "source_sha256": "c6d2f5480c36bdb7567ba3f80e2bf4b001f4290553db3382d2bf62f14115ca92",
+          "raw_output_sha256": "2461719d954452d285ef07856b9fe445b7c0f2f881494ac3a7d639d38775ce11",
+          "redactions": []
+        }
+      }
+    }
+  },
+  "public_artifact_hashes": {
+    "evaluation\\HUMAN_SCORING_PACKET.md": "567cd471192f2cd35a03839bc75b41765b0c936edf01816fd5dbdb675b1a0902",
+    "evaluation\\HUMAN_SCORES_TEMPLATE.csv": "af8d6dd01de110ac43335468a05364e1ecb975d3fa505a19beb2e14e1522a0a4",
+    "evaluation\\scoring_batches\\batch_01.md": "a08f26be9bd9329b22f5faabbf80faa627dd3d9553d626519e98d2784c893fbc",
+    "evaluation\\scoring_batches\\batch_02.md": "e5b203c4b25483353a77f0f13a179ba221a8a4dda58f5e8fae51c8fc84275bcf",
+    "evaluation\\scoring_batches\\batch_03.md": "a6dbf77b36163e48da8a5a6d8b726d36beb1d73fd023b481a60a18906e4362e0",
+    "evaluation\\scoring_batches\\batch_04.md": "c042b3f6cfb8455708263e372c8c3fb0cb906437b778b0e7702d7cfb6cfbd4f6"
+  }
+}

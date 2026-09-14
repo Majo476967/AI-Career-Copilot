@@ -2457,3 +2457,54 @@ V1.0 Freeze
 * Profile Draft 保存在 SQLite，未确认前不显示为正式档案；支持表单修改、确认、放弃和重新上传，证据只读。岗位通过 `JDService.preview_jd()` 预览，确认时复验并使用已解析结果，不再次请求分析模型；预览保存在当前会话，尚不属于 Active JD。
 * SQLite 仍为 Source of Truth。Session State 仅保存控件、岗位预览和已成功动作的结果，结合任务/草稿 ID、输入指纹以及后端事务与重复校验防止 rerun 重复操作。画像草稿和正式状态可在重启后恢复，未确认岗位预览无需持久化。
 * 新增 Streamlit 依赖；不引入独立 Web 后端、登录或新的 AI 能力。`CAREER_COPILOT_DB` 可选择本地演示/测试数据库；虚构文件见 demo/，真实模型 Smoke Test 仅手动执行。
+
+
+## 人工 Smoke 修复约定：JD Normalization / Required Level
+
+针对 BC-JD-001 / BC-JD-002 的实现修订，不新增产品功能。
+
+* Capability 继续使用固定 Vocabulary 与 Python 确定性规则，无额外模型请求。精确 alias 优先；强 SQL / 数据库查询 / 查询业务数据名称归 SQL，Python 归既有 Programming，数据分析 / 指标拆解 / 指标变化 / 业务指标归 Data Analysis，用户研究 / 用户调研 / 访谈 / 问卷归 User Research。显式工具词优先于泛化数据分析；同时含不同显式工具或领域时保留原名，避免丢失独立能力。NoSQL / Pythonic 等非目标词不做子串误合并；未匹配名称保留。
+* JD Analysis 保留 raw_names 与原文 Evidence，合并时保留全部原始名称。Aggregation 按 canonical name、每 Active JD 一次计数；Archived 不参与。已存 JD 在读取投影与聚合时应用同一规则，不重写历史 Event、Snapshot 或用户本地 JSON。
+* JD Required Level 与 User Capability Level 分开解释。岗位等级 1=基础理解，2=实践使用，3=真实经历，4=深度能力。用户 Level 0 仍是 unknown evidence / 当前证据不足；岗位的兼容整数 0 仅表示“岗位未明确等级”，不能解释为用户不会，也不是已满足要求。
+* JD Evidence 经原文引用校验后，Python 根据肯定表达校准：了解/理解/熟悉基础概念→1；能够使用/能用工具完成查询、分析或实现→2；真实项目/实习经验、业务落地、实际负责过→3；复杂系统设计、深度优化、规模化经验、专家级→4。组合表达取最高明确强度；否定要求不用于升级。单纯“必须/重要”不代表高等级。`熟悉 SQL，能用 JOIN 和 GROUP BY 完成查询练习`及`必须能够用 SQL 查询和分析业务数据`均为 2；真实 SQL 项目经验为 3。
+* 未命中强规则时沿用既有有效正整数 Analyzer 等级，仍属于分析推断，不声称 Python 已证明其语义；规则校准不能代替原文核对。输入等级为 0 且证据无法校准时保持未知，不擅自赋予用户等级或假定零 Gap。
+* 未知岗位深度按 Capability 隔离：该能力标记 requirement_level_unknown，保留 Coverage、原文及 unknown_jd_ids，但不进入数值 Gap 或 quantitative Priority。其余要求明确的能力正常排名和规划；输出 warnings 及 unknown_requirement_capabilities 提醒补充。同一能力跨 JD 只要仍有未知深度，整项暂不评分，避免通过忽略未知岗位改变聚合口径。只有存在未知项且其余能力均不能形成正向候选时返回 insufficient_requirement_data；全部已知但无正向 Gap 仍为 no_positive_gap，无 Active JD 等既有空状态保持不变。不新增确认 UI、数据库表或自动 LLM 重试。
+* User Level 文案继续使用“0 · 当前证据不足”；Target Jobs 的 JD 表格独立使用岗位等级文案，未知显示“岗位未明确等级”。这项语义修订取代早期 JD 0～4 与 User 0～4 共用解释的歧义，评分公式及其他 Scope 不变。
+
+
+## BC-PROFILE-001：Profile 能力完整性校验
+
+Resume Analyzer 必须逐项检查明确技能与项目中的能力，不得仅填充 skills/projects 而遗漏能力草稿。User 与 JD 共用 canonical vocabulary；User Draft 保留 raw_names 和可追溯的原文 Evidence。
+
+当原文通过已有 Vocabulary / 强匹配识别到能力，但 capabilities 全空时，返回 incomplete_profile，拒绝作为合法解析结果、草稿编辑或确认输入。此检查仅识别遗漏，不推断或自动设置等级，不为 Demo 特判。没有可识别能力的简历不强造能力；合法等级仍遵循现有证据与用户确认规则。Confirm 的 Profile / Capabilities / Evidence / PROFILE_CONFIRMED 原子事务不变。
+
+既有错误确认数据不自动修补；由用户重新解析、核对和确认新草稿。不得修改历史 Event、Snapshot 或 Evaluation Run 来隐藏本次失败。此为已批准链路校验修复，不增加产品 Scope。
+
+
+## BC-PROFILE-002 / BC-TASK-001：定向验收修订
+
+* Profile completeness 从“全空才检查”改为显式已知能力集合差检查。SQL/数据库查询、Python、数据分析/业务指标、用户研究/用户调研、Agent/智能体、RAG/检索增强、Evaluation/评测等高置信名称经同一 canonical vocabulary 映射；同句多个能力分别检查。缺少任一项返回 incomplete_profile 并列出 missing canonical capabilities。模糊描述不扩展能力，不补写条目、不推断等级。
+* Planner 只有在 latest_feedback 非空时才能引用用户反馈。None/空反馈上下文中，明确反馈归因触发 unsupported_feedback_attribution，生成结果不保存；不自动额外请求模型。Memory 的 None 与真实反馈记录区分保持不变。
+* 用户可见 reason 统一映射：evidence_knowledge_verification=补充或核实基础能力证据，practice=实践应用，experience=真实场景经验，depth=深度能力。数据库阶段 enum 保留，旧 reason 仅在展示时转换，不重写历史。
+* 本次不调整 Priority Formula 或 Task 内容设计；上述修订用于已报告的完整性、事实归因与内部枚举泄露问题，不新增产品 Scope。
+
+
+## BC-PROFILE-003：最小 Human-in-the-loop Recovery
+
+本节按已批准恢复流程修订之前 completeness 仅 reject 的约定。严格结构/原文来源/等级校验不变；只有能力漏项可作为 incomplete Draft 保存，不是正式用户状态。
+
+现有 profile_drafts.draft_json 新增：validation_status（incomplete / valid）、missing_capabilities（canonical_name、matched_resume_terms、evidence_snippets）、ignored_missing_capabilities（当前 Draft 显式不纳入的 canonical 名称）。表的 status 继续为 draft / confirmed / discarded，无新表、无 SQLite 迁移。缺项详情仅给出原文依据，不带猜测的 Level。
+
+UI 展示“检测到可能遗漏的能力”；用户选择 Level 并确认原文后才能添加，或显式不纳入。忽略不改变全局词表、不继承到新 Draft；LLM 输出的忽略字段不能作为人工 override。人工 Evidence 标记 source=resume、evidence_type=user_confirmed_resume_evidence、content=所选原文；这是用户确认而非模型认证。高等级仍遵守原有经历证据要求。
+
+每次添加/忽略在 Draft 事务内重新校验；missing 全部处理后 validation_status=valid，UI 才启用 Confirm。Confirm Service 必须重新计算 completeness，不信任客户端的状态标志，并维持 Profile / Capabilities / Evidence / PROFILE_CONFIRMED 的原子写入。任何恢复动作本身不写 Current State，不重复调用 LLM，不静默补能力或等级。不增加通用复杂编辑器，不改变 JD / Priority / Planner。
+
+## V1.0 Owner Evaluation Release Decision — 2026-09-14
+
+Evaluation：COMPLETE WITH LIMITATIONS。AC10：PARTIAL — ACCEPTED LIMITATION。External Human A/B Evaluation：NOT CONDUCTED（不是PASS），作为Future Work，不再阻塞本次V1.0 Release；不追加AI Judge或外部人工A/B评测。
+
+Owner接受理由：真实用户Manual Smoke和Bad Case Retest已完成，Automatic Evaluation及两轮独立Blind AI Review已完成；Judge #1偏好Copilot 12 / Baseline 3 / Tie 1，Judge #2为13 / 3 / 0，Preferred Agreement=14/16=87.5%。对于当前个人项目V1.0，继续增加评审的边际收益较低。此为Owner接受限制，不是把AI评审当成人工评审。
+
+自动指标State checks、Duplicate Rate、Coverage两方打平；AI评审中的稳定差异主要来自Task Actionability。Long History未体现Copilot稳定优势，不能宣称所有场景都胜出或统计显著。Copilot Constraint Violation Cases为Judge #1的4例、Judge #2的1例（Baseline分别11、10），口径分歧保留。Priority是准备优先级heuristic，非数学最优或最优ROI；能力升级基于用户自报Evidence，非客观考试认证。
+
+Final Release以RELEASE_CHECKLIST.md的最终技术验证为准；接受Evaluation限制不豁免测试、依赖、安全与文档检查。历史评分和Run保持原样，旧的人工评审PENDING记录仅代表当时状态。

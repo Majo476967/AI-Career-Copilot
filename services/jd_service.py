@@ -135,20 +135,10 @@ class JDService:
 
     @storage_errors
     def get_active_jd_capability_summary(self):
-        summary = {}
-        for jd in self.repo.get_active_jds():
-            seen = set()
-            for item in jd["jd_analysis_json"].get("capabilities", []):
-                name = item["name"]
-                if name in seen:
-                    continue
-                seen.add(name)
-                row = summary.setdefault(name, {"jd_ids": [], "count": 0, "importance": [], "required_levels": []})
-                row["jd_ids"].append(jd["id"])
-                row["count"] += 1
-                row["importance"].append(item["importance"])
-                row["required_levels"].append(item["required_level"])
-        return summary
+        aggregation = self.get_active_jd_requirements()
+        return {row["capability_name"]: {"jd_ids": row["jd_ids"], "count": row["active_jd_count"],
+                "importance": row["importance_labels"], "required_levels": row["required_levels"]}
+                for row in aggregation["requirements"]}
 
     @storage_errors
     def get_active_jd_requirements(self):

@@ -9,6 +9,9 @@ PROMPT = """从 JD 原文提取岗位能力要求，不计算 Gap、Priority，�
 company/job_title 必须引用原文；无法确定时用空字符串。
 capabilities 每项包含 name、category、importance、required_level、evidence。
 importance 只能是 must_have、important、bonus；required_level 是0～4整数。
+岗位要求：1 基础理解；2 能使用工具完成查询/分析/实现；3 真实项目或实习、业务落地经验；4 复杂系统设计、深度优化或规模化经验。
+仅当岗位原文无法确定深度时用0（岗位未明确等级），这不是用户能力的“当前证据不足”。
+evidence 应保留能力及动作/经验强度的完整短句，不只摘取 SQL、Python 等词。
 evidence 必须逐字引用 JD 的实际表达，不得凭行业常识添加要求。
 同名能力归并。不将泛化的数据分析要求自动替换为 SQL。"""
 

@@ -3,8 +3,9 @@
 Quote checks establish provenance, not semantic truth; human confirmation still matters.
 """
 import json
+import re
 import unicodedata
-from core.capabilities import normalize_capability
+from core.capabilities import normalize_capability, normalize_alias, normalize_jd_requirement, explicit_resume_capabilities, missing_resume_capabilities
 from core.errors import AnalysisError
 
 IMPORTANCE = {"bonus": 0, "important": 1, "must_have": 2}
@@ -59,7 +60,7 @@ def require_quote(value, source):
         fail("分析包含原文中不存在的经历或证据，请核对原文后重试。")
 
 
-def validate_profile(data, resume_text, *, human_edited=False):
+def validate_profile(data, resume_text, *, human_edited=False, allow_incomplete=False):
     if not isinstance(data, dict):
         fail("Profile Draft 必须是对象。")
     result = {}
@@ -79,7 +80,7 @@ def validate_profile(data, resume_text, *, human_edited=False):
             if not isinstance(item, dict) or item.get("source") != "resume":
                 fail("简历 Evidence 的 source 必须为 resume。")
             kind = text(item.get("evidence_type"), "evidence_type")
-            if kind not in EVIDENCE_TYPES:
+            if kind not in EVIDENCE_TYPES and not (human_edited and kind == "user_confirmed_resume_evidence"):
                 fail("无效的简历 evidence_type。")
             content = text(item.get("content"), "evidence.content")
             require_quote(content, resume_text)
@@ -88,17 +89,29 @@ def validate_profile(data, resume_text, *, human_edited=False):
                 evidence.append(normalized)
         if value > 0 and not evidence:
             fail("缺少可验证 Evidence 时等级只能为 0，不能推高能力等级。")
-        if value > 1 and all(normalize_capability(e["content"]) == name for e in evidence):
+        if value > 1 and all(normalize_alias(e["content"]) == name for e in evidence):
             fail("仅出现能力关键词不足以支持实践及以上等级。")
-        if value >= 3 and not any(e["evidence_type"] in {"project", "internship"} for e in evidence):
+        if value >= 3 and not any(e["evidence_type"] in {"project", "internship"} or (human_edited and e["evidence_type"] == "user_confirmed_resume_evidence" and re.search(r"项目|实习|业务|project|internship", e["content"], re.I)) for e in evidence):
             fail("Experience / Depth 必须有明确的项目或实习证据。")
         if name not in merged:
-            merged[name] = {"name": name, "level": value, "evidence": evidence}
+            merged[name] = {"name": name, "raw_names": list(dict.fromkeys(raw.get("raw_names", [raw["name"]]))), "level": value, "evidence": evidence}
         else:
+            merged[name]["raw_names"] = list(dict.fromkeys(merged[name]["raw_names"] + raw.get("raw_names", [raw["name"]])))
             merged[name]["level"] = max(merged[name]["level"], value)
             for item in evidence:
                 if item not in merged[name]["evidence"]:
                     merged[name]["evidence"].append(item)
+    ignored = []
+    if human_edited:
+        ignored = sorted({normalize_capability(text(name, "ignored capability"))
+                          for name in array(data.get("ignored_missing_capabilities", []), "ignored_missing_capabilities")})
+    missing = missing_resume_capabilities(resume_text, merged, ignored)
+    if missing and not allow_incomplete:
+        detail = "能力草稿为空；" if not merged else ""
+        raise AnalysisError("incomplete_profile", detail + "简历存在明确能力，但草稿缺少 canonical capabilities：" +
+            "、".join(item["canonical_name"] for item in missing) + "。请在草稿中补充或明确不纳入；系统不会猜测 Level。")
+    result.update(validation_status="incomplete" if missing else "valid", missing_capabilities=missing,
+                  ignored_missing_capabilities=ignored)
     result["capabilities"] = list(merged.values())
     return result
 
@@ -119,17 +132,22 @@ def validate_jd(data, jd_text):
         importance = text(raw.get("importance"), "importance")
         if importance not in IMPORTANCE:
             fail("importance 只能是 must_have、important 或 bonus。")
-        required = level(raw.get("required_level"))
+        required = raw.get("required_level")
+        if type(required) is not int or not 0 <= required <= 4:
+            fail("岗位要求等级必须是 0～4 整数；0 表示岗位未明确等级。")
         evidence = text(raw.get("evidence"), "evidence")
         # A merged capability can cite several separate source excerpts.
         for excerpt in evidence.splitlines():
             if excerpt.strip():
                 require_quote(excerpt, jd_text)
+        calibrated = normalize_jd_requirement({**raw, "evidence": evidence})
+        required = calibrated["required_level"]
         if name not in merged:
-            merged[name] = {"name": name, "category": category, "importance": importance,
+            merged[name] = {"raw_names": calibrated["raw_names"], "name": name, "category": category, "importance": importance,
                             "required_level": required, "evidence": evidence}
         else:
             old = merged[name]
+            old["raw_names"] = list(dict.fromkeys(old["raw_names"] + calibrated["raw_names"]))
             old["required_level"] = max(old["required_level"], required)
             old["importance"] = max((old["importance"], importance), key=IMPORTANCE.get)
             # Keep separate source excerpts verifiable on subsequent validation.

@@ -1,0 +1,290 @@
+[
+  {
+    "case_id": "C01",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C01",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C02",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C02",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C03",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C03",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C04",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C04",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C05",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C05",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C06",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C06",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C07",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C07",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C08",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C08",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C09",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C09",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C10",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C10",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C11",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C11",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C12",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C12",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C13",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C13",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C14",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C14",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C15",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C15",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C16",
+    "arm": "copilot",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  },
+  {
+    "case_id": "C16",
+    "arm": "baseline",
+    "actionability": null,
+    "decision_reasonableness": null,
+    "replanning_consistency": null,
+    "reviewer": null,
+    "notes": ""
+  }
+]

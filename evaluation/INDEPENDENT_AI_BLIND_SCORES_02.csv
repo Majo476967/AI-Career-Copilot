@@ -1,0 +1,273 @@
+﻿case_id,scenario_type,A_actionability,A_reasonableness,A_replanning,A_constraint_violation,A_notes,B_actionability,B_reasonableness,B_replanning,B_constraint_violation,B_notes,preferred_output,reviewer,review_method,human_signoff,source_sha256,A_review_raw,B_review_raw,preference_reason
+C01,single_jd,2,3,N/A,Yes,任务过于宏观，缺乏落地路径，时间设置严重不合理。,5,3,N/A,No,任务颗粒度合适，可执行性强，但优先级论证可更充分。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：2 / 5**
+  理由：仅提出“将SQL能力提升至2级”的宏观目标，无具体执行动作、步骤和交付物；验收标准模糊，“等级2对应的任务和项目”“测试或评估”无明确可衡量定义；20分钟时长与“提升一个能力等级”的难度严重不匹配。属于有方向但步骤、产出、验收严重缺失。
+- **Decision Reasonableness：3 / 5**
+  理由：决策方向正确，基于JD中SQL的must_have要求与用户1级的差距得出优先结论，事实依据准确。但未提及Programming已达标的情况，未完整对比各能力的优先级，权衡论证不全面。
+- **Replanning：N/A**
+  理由：无历史的首轮Case，不适用重规划评分。
+- **Constraint Violations：Yes**
+  理由：任务无具体可交付产出，验收标准不具备可操作性，且20分钟提升一级能力明显不符合合理时间预期，属于任务不可验收+违反时间合理性约束。
+- **Notes**：任务过于宏观，缺乏落地路径，时间设置严重不合理。","- **Task Actionability：5 / 5**
+  理由：任务极其具体，明确给出表结构、查询需求（筛选薪资>5000、降序排列），产出为SQL语句和查询结果；验收标准可直接验证；30分钟时长匹配单条SQL练习的难度，且在每日1小时预算内，可直接上手执行。
+- **Decision Reasonableness：3 / 5**
+  理由：决策方向正确，基于用户SQL 1级需提升至2级的事实设计练习，符合能力提升逻辑。但未引用JD中SQL的must_have优先级属性，也未提及Programming已达标的对比信息，优先级论证不充分，权衡不完整。
+- **Replanning：N/A**
+  理由：无历史的首轮Case，不适用重规划评分。
+- **Constraint Violations：No**
+  理由：未重复已完成任务，无反馈需处理，未使用归档JD，无编造反馈，任务可验收，时间符合每日预算且难度匹配。
+- **Notes**：任务颗粒度合适，可执行性强，但优先级论证可更充分。",方案B的任务可执行性远优于方案A，任务具体、验收清晰、时间合理，能够实际落地帮助用户提升SQL能力；方案A过于空泛，无法直接执行。尽管两者决策合理性持平，但方案B的实际行动价值更高。
+C02,single_jd,4,4,N/A,No,从基础知识切入，匹配0级起点，任务合理。,1,2,N/A,Yes,任务过于宏观，无实际执行价值。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：任务具体，要求查找3篇权威文档并总结等级2要点，产出明确；验收标准可验证；30分钟时长合理。仅“权威文档”的定义需少量澄清，整体可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：正确识别用户Evaluation为0级，从知识补充切入，匹配0级到2级的初始阶段路径；符合岗位要求，理由清晰。未对比Agent已达标的情况，属于少量遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：No**
+  理由：无违规项，任务可验收，时间合规。
+- **Notes**：从基础知识切入，匹配0级起点，任务合理。","- **Task Actionability：1 / 5**
+  理由：仅提出“提升Evaluation能力至2级”的目标，没有任何具体执行动作、步骤和产出；验收标准完全空泛；时间估算模糊且无依据，属于空泛无可执行动作。
+- **Decision Reasonableness：2 / 5**
+  理由：方向正确，知道Evaluation需要提升，但仅简单陈述差距，遗漏了用户0级起点的能力特征、每日时间约束等重要信息，重要约束被遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：Yes**
+  理由：任务完全空泛，无可执行动作和明确产出，属于任务不可验收；时间估算无依据，不符合合理约束。
+- **Notes**：任务过于宏观，无实际执行价值。",方案A任务具体，匹配0级起点的知识补充需求，可执行性强；方案B完全是空泛目标，无法落地。
+C03,single_jd,1,2,N/A,Yes,任务过于宏观，无实际执行价值。,5,4,N/A,No,任务具体，匹配1级实践需求，可执行性强。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：1 / 5**
+  理由：仅提出“将Product Design从2级提升到3级”的目标，无具体执行动作、步骤和产出；验收标准模糊且主观（“得到导师或同行认可”）；30天的时间估算无依据，属于空泛无可执行动作。
+- **Decision Reasonableness：2 / 5**
+  理由：方向有一定依据（Product Design有差距），但未对比两个能力的优先级，也未考虑每日1小时的时间约束，重要约束被遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：Yes**
+  理由：任务空泛无可执行产出，验收标准主观不可衡量，时间估算无依据。
+- **Notes**：任务过于宏观，无实际执行价值。","- **Task Actionability：5 / 5**
+  理由：任务具体，明确设计在线协作办公软件的用户调研问卷，要求不少于10题，涵盖使用频率、满意度、改进建议；验收标准清晰可验证；30分钟时长合理，可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：基于User Research 1级水平设计问卷练习，匹配能力提升路径，符合岗位要求。未完整对比Product Design的优先级，属于少量遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：No**
+  理由：无违规项，任务可验收，时间合规。
+- **Notes**：任务具体，匹配1级实践需求，可执行性强。",方案B任务具体可落地，验收清晰，时间合理；方案A完全是空泛目标，无法执行。
+C04,multi_jd,2,3,N/A,Yes,优先级判断有一定依据，但任务空泛。,5,3,N/A,No,任务具体可执行，但优先级论证可更充分。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：2 / 5**
+  理由：仅提出“学习SQL，将其提升至2级”，有方向但具体学习内容、产出、步骤均严重缺失；验收标准较模糊；20分钟时长与提升一级的难度不匹配。
+- **Decision Reasonableness：3 / 5**
+  理由：决策优先SQL，依据是多数岗位要求SQL且为important，方向可接受。但未充分权衡5个岗位的整体分布（第5个岗位核心是Data Analysis），也未对比两个能力的优先级逻辑，权衡不完整。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：Yes**
+  理由：20分钟提升一级时间不合理，且任务验收模糊，可执行性不足。
+- **Notes**：优先级判断有一定依据，但任务空泛。","- **Task Actionability：5 / 5**
+  理由：任务具体，给出了明确的SQL数据分析场景（销售表月度销售额统计排序），产出为查询语句和结果；验收标准清晰可验证；30分钟时长合理，可直接执行。
+- **Decision Reasonableness：3 / 5**
+  理由：优先SQL的方向正确，基于1级水平设计实践练习，符合能力提升逻辑。但未结合多岗位的整体要求论证SQL的优先级，也未提及Data Analysis的情况，权衡不完整。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：No**
+  理由：无违规项，任务可验收，时间合规。
+- **Notes**：任务具体可执行，但优先级论证可更充分。",方案B的任务可执行性远优于方案A，具体的练习任务能够实际落地；方案A过于空泛，时间也不合理。两者决策合理性相近，但方案B的行动价值更高。
+C05,multi_jd,4,3,N/A,No,任务具体，但优先级合理性存疑。,1,2,N/A,Yes,任务过于宏观，无执行价值。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：任务具体，设计简易Agent程序，体现意图识别和回复逻辑，产出明确；验收标准清晰；30分钟时长合理，仅“简易Agent程序”的复杂度需少量澄清。
+- **Decision Reasonableness：3 / 5**
+  理由：优先提升Agent的方向有一定依据，但未充分权衡多岗位的核心要求：SQL是所有岗位的must_have且已达标，Agent是bonus，优先级论证不充分，权衡不完整。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：No**
+  理由：无违规项，任务可验收，时间合规。
+- **Notes**：任务具体，但优先级合理性存疑。","- **Task Actionability：1 / 5**
+  理由：仅提出“将Agent能力提升至3级”的目标，无具体动作、产出；验收标准空泛；30天时间估算无依据，无可执行性。
+- **Decision Reasonableness：2 / 5**
+  理由：方向正确但理由单薄，未结合多岗位的重要程度对比（Agent是bonus），也未考虑时间约束，重要约束被遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：Yes**
+  理由：任务空泛，无可执行产出，验收标准模糊，时间估算无依据。
+- **Notes**：任务过于宏观，无执行价值。",方案A任务具体可执行，能够实际练习Agent能力；方案B完全是空泛目标，无法落地。
+C06,multi_jd,1,2,N/A,Yes,任务过于宏观，无执行价值。,4,3,N/A,No,任务具体，但优先级权衡可更深入。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：1 / 5**
+  理由：仅提出“提升Evaluation至2级”的目标，无具体动作、产出；验收标准模糊；20天时间估算无依据，无可执行性。
+- **Decision Reasonableness：2 / 5**
+  理由：方向有一定依据，但未充分权衡多岗位的复杂情况（RAG在岗位2要求更高），也未考虑时间约束，重要约束被遗漏。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：Yes**
+  理由：任务空泛，无可执行产出，验收标准模糊，时间估算无依据。
+- **Notes**：任务过于宏观，无执行价值。","- **Task Actionability：4 / 5**
+  理由：任务具体，要求完成2个符合Level2的Evaluation练习案例，产出明确；验收标准清晰；60分钟时长合理，仅“练习案例”的具体内容需少量澄清。
+- **Decision Reasonableness：3 / 5**
+  理由：优先Evaluation的方向有一定依据（岗位1要求2级，用户1级），但未充分权衡多岗位中RAG的更高要求，优先级论证不充分，权衡不完整。
+- **Replanning：N/A**
+  理由：首轮无历史，不适用。
+- **Constraint Violations：No**
+  理由：无违规项，任务可验收，时间合规。
+- **Notes**：任务具体，但优先级权衡可更深入。",方案B任务具体可执行，能够实际练习评估能力；方案A完全是空泛目标，无法落地。
+C07,completed,3,3,3,No,任务推进逻辑正确，但承接性和验收标准可优化。,4,3,4,No,验收标准更明确，重规划的连续性更好。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：3 / 5**
+  理由：明确任务为“第2组JOIN查询练习”，产出为代码和输出，方向清晰。但验收标准仅“成功完成”，缺乏可量化验证标准；60分钟时长符合每日预算，但未说明练习具体难度和内容，验收清晰度不足。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，基于已完成第1组、需继续提升到2级的逻辑推进。但未结合JD的must_have要求强化优先级，也未说明第2组练习与能力提升的对应关系，论证完整性不足。
+- **Replanning：3 / 5**
+  理由：识别了已完成第1组的历史，推进到第2组，未重复已完成任务，基本响应了进度变化。但未对已完成部分做总结承接，任务连续性不足，也未说明第2组的进阶点。
+- **Constraint Violations：No**
+  理由：未重复已完成任务，无明确反馈需处理，未使用归档JD，任务基本可验收，时间符合每日预算。
+- **Notes**：任务推进逻辑正确，但承接性和验收标准可优化。","- **Task Actionability：4 / 5**
+  理由：任务明确为第2组JOIN查询练习，产出为代码和输出；验收标准包含“代码运行正确”“完整保存代码和输出”两项，比方案A更清晰；60分钟时长合理。仅缺少练习具体内容说明，属于少量需澄清项。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，基于岗位要求、当前水平和已完成第1组的进度，得出下一步做第2组的结论。但同样未充分结合JD优先级，也未说明进阶逻辑，论证完整性一般。
+- **Replanning：4 / 5**
+  理由：清晰承接已完成的第1组练习，平滑推进到第2组，保持了任务连续性；没有重复已完成内容，针对完成状态做了递进调整，仅缺少对已完成成果的明确确认，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：未违反各项约束，任务可验收，时间合规。
+- **Notes**：验收标准更明确，重规划的连续性更好。",方案B的验收标准更清晰可衡量，重规划的连续性和承接性更好，任务可执行性更强；方案A相对粗糙，验收和承接性不足。
+C08,completed,2,3,2,Yes,方向正确但任务空泛，承接性差。,5,4,4,No,切换自然，任务具体，匹配入门级数据分析练习。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：2 / 5**
+  理由：仅提出“学习Data Analysis达到2级”，方向有但具体内容、产出、步骤均严重缺失；验收标准模糊；20分钟时长与任务难度不匹配。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，SQL已达标，切换到Data Analysis提升，符合岗位要求。但理由单薄，未充分论证优先级，也未结合历史SQL完成情况做承接，权衡不完整。
+- **Replanning：2 / 5**
+  理由：泛泛切换了能力方向，但未明确承接SQL已完成的成果，也未解释切换原因，重规划的连续性不足。
+- **Constraint Violations：Yes**
+  理由：20分钟时长不合理，任务空泛验收模糊。
+- **Notes**：方向正确但任务空泛，承接性差。","- **Task Actionability：5 / 5**
+  理由：任务具体，要求在数据集上做数据清洗（缺失值、重复值、异常值），记录步骤和问题；验收标准清晰可验证；30分钟时长合理，可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：正确识别SQL已达标，切换到Data Analysis，基于1级水平设计清洗练习，匹配能力提升路径，理由清晰。
+- **Replanning：4 / 5**
+  理由：承接了SQL已完成的进度，平滑切换到Data Analysis的基础练习，保持了能力提升的连续性，仅未明确总结SQL的完成状态，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：未重复已完成任务，切换合理，无违规。
+- **Notes**：切换自然，任务具体，匹配入门级数据分析练习。",方案B任务具体可执行，重规划的切换更自然，承接性更好；方案A任务空泛，时间不合理。
+C09,partial,4,4,4,No,精准响应卡点，任务聚焦。,3,3,3,No,方向正确，但任务颗粒度和承接性弱于方案A。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：任务为第2组JOIN练习，重点练关联子查询，产出明确；验收标准包含正确使用correlated subquery，清晰可验证；60分钟时长合理。仅“第2组”的具体题量需少量澄清。
+- **Decision Reasonableness：4 / 5**
+  理由：充分使用了反馈的卡点信息，针对关联子查询安排练习，符合岗位提升目标，理由清晰。
+- **Replanning：4 / 5**
+  理由：区分了已完成的JOIN部分和卡点关联子查询，在第2组中重点突破卡点，承接了历史进度，没有重复已完成内容，仅未明确说明第2组与第1组的递进关系，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：充分使用了partial反馈，未重复已完成部分，无违规。
+- **Notes**：精准响应卡点，任务聚焦。","- **Task Actionability：3 / 5**
+  理由：任务是学习并练习关联子查询，方向明确，但缺少具体练习场景和产出要求，验收标准较笼统，可执行性弱于方案A。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，知道要练关联子查询，但理由表述简略，未结合历史进度和岗位要求充分论证，权衡不完整。
+- **Replanning：3 / 5**
+  理由：基本响应了卡点，但承接性不足，未明确区分已完成和未完成部分，任务连续性一般。
+- **Constraint Violations：No**
+  理由：基本使用了反馈，未违规。
+- **Notes**：方向正确，但任务颗粒度和承接性弱于方案A。",方案A任务更具体，验收更清晰，重规划的承接性更好，精准针对卡点；方案B相对笼统。
+C10,partial,3,3,2,Yes,重规划策略粗糙，重复已完成内容，未精准卡点。,5,4,5,No,精准响应反馈，卡点突破策略高效。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：3 / 5**
+  理由：任务是重新做第2组练习，重点关注参数校验，产出明确。但“重新进行整组练习”的安排冗余，已完成的工具定义部分无需重复；验收标准较笼统，60分钟时长偏长。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，识别了参数校验的卡点，也知道需要提升Agent能力。但决策是重做整组练习，没有精准针对卡点，资源利用不合理，权衡不够优化。
+- **Replanning：2 / 5**
+  理由：提及了历史问题，但调整方式是原样重发整组任务，没有区分已完成的“工具定义”和卡点“参数校验”，属于泛泛提及历史、未做有效精准调整，浪费已完成成果。
+- **Constraint Violations：Yes**
+  理由：存在重复已完成部分的问题，用户已完成工具定义，方案仍要求重做整组练习，重复了已完成的任务部分；且未精准使用partial反馈聚焦卡点。
+- **Notes**：重规划策略粗糙，重复已完成内容，未精准卡点。","- **Task Actionability：5 / 5**
+  理由：任务精准聚焦参数校验部分，明确产出为参数校验代码和输出；验收标准清晰可验证；30分钟时长匹配单点突破的难度，时间合理，可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：充分使用了最新反馈的卡点信息，针对参数校验的问题安排专项突破，符合岗位提升目标，理由清晰。仅未完整对比能力等级差距的整体路径，属于少量遗漏。
+- **Replanning：5 / 5**
+  理由：清晰区分了已完成的“工具定义”和卡点“参数校验”，保留已完成成果，仅针对卡点推进任务，没有重复劳动，完全响应了反馈，调整精准合理，连续性好。
+- **Constraint Violations：No**
+  理由：未重复已完成任务，充分使用了partial反馈，未违反其他约束。
+- **Notes**：精准响应反馈，卡点突破策略高效。",方案B精准响应了部分完成的反馈，只针对卡点安排任务，避免重复劳动，重规划质量高，任务更聚焦、时间更合理，可执行性更强；方案A重做整组任务效率低，浪费已完成成果。
+C11,not_completed,4,4,4,No,精准响应时间限制，调整策略合理。,2,2,1,Yes,完全未响应反馈，任务设置不合理。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：针对10分钟的时间限制，设计简化版JOIN练习，产出明确；验收标准清晰；10分钟时长匹配用户反馈的时间限制，仅“简化后的练习”具体内容需少量澄清。
+- **Decision Reasonableness：4 / 5**
+  理由：充分使用了用户“今天只能投入十分钟”的反馈，调整任务量，符合岗位提升目标，理由清晰，对时间约束的响应到位。
+- **Replanning：4 / 5**
+  理由：针对未完成的原因（任务太大、时间不够），调整为简化版任务，响应了反馈，保持了JOIN练习的方向，没有偏离目标，仅未明确承接上次的进度，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：充分使用了反馈，未重复任务，时间符合用户声明的限制，无违规。
+- **Notes**：精准响应时间限制，调整策略合理。","- **Task Actionability：2 / 5**
+  理由：仍要求完成完整的“第1组JOIN查询练习”，但用户反馈任务太大、只有10分钟，任务难度与时间不匹配；验收标准模糊，10分钟无法完成完整的第1组练习。
+- **Decision Reasonableness：2 / 5**
+  理由：虽然方向正确，但遗漏了用户“任务太大、只有10分钟”的重要约束，仍安排完整任务，不符合用户实际情况，重要约束被遗漏。
+- **Replanning：1 / 5**
+  理由：完全忽略了“任务太大”的反馈和未完成的事实，原样重发原任务，没有做任何调整，属于忽略已完成事实/卡点、原样重发。
+- **Constraint Violations：Yes**
+  理由：未响应用户明确的时间反馈，任务量与10分钟严重不匹配，属于未使用明确反馈且违反时间约束。
+- **Notes**：完全未响应反馈，任务设置不合理。",方案A充分响应了用户的时间限制，简化了任务，适配10分钟的投入，重规划合理；方案B完全忽略反馈，原样重发任务，无法完成。
+C12,not_completed,2,3,3,No,方向正确但任务太笼统。,5,4,5,No,精准响应卡点，任务颗粒度合适。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：2 / 5**
+  理由：仅提出“构建小样本测试集”，方向正确但具体要求、样本量、数据类型均缺失；验收标准模糊，可执行性差。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，响应了缺少测试数据的反馈，但理由单薄，未明确测试集与后续评测任务的关系，论证不充分。
+- **Replanning：3 / 5**
+  理由：基本响应了未完成的原因，调整为构建测试集，但承接性不足，未明确说明与原任务的依赖关系。
+- **Constraint Violations：No**
+  理由：基本响应了反馈，无明确违规。
+- **Notes**：方向正确但任务太笼统。","- **Task Actionability：5 / 5**
+  理由：任务具体，要求构建10个样本的测试集，涵盖不同数据类型；验收标准清晰可验证；30分钟时长合理，可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：充分响应了反馈的卡点，精准安排构建测试集的任务，明确了样本量和覆盖范围，理由清晰，为后续评测任务铺路。
+- **Replanning：5 / 5**
+  理由：精准识别了未完成的核心原因是缺少测试数据，针对性安排前置任务，没有重复原任务，调整合理，逻辑连贯，清晰区分了卡点和解决方案。
+- **Constraint Violations：No**
+  理由：充分使用了反馈，任务合理，无违规。
+- **Notes**：精准响应卡点，任务颗粒度合适。",方案B任务具体明确，重规划精准响应了反馈的卡点，可执行性强；方案A过于笼统。
+C13,target_change,4,4,4,No,目标切换正确，任务具体，符合新方向。,2,2,2,Yes,任务过于宏观，时间严重超预算，可执行性差。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：任务具体，要求完成包含5类数据的评估任务并撰写报告，明确了产出物和内容要求；验收标准清晰可衡量；60分钟时长符合每日预算，仅任务难度与等级2的匹配度需少量澄清。
+- **Decision Reasonableness：4 / 5**
+  理由：正确识别了当前Active JD的核心要求是Evaluation，优先提升Evaluation，符合目标变更后的方向；基于1级水平设计实践任务，理由清晰。未提及已归档的SQL目标，属于少量不影响核心的遗漏。
+- **Replanning：4 / 5**
+  理由：正确响应了目标变更，从SQL切换到Evaluation，没有继续做SQL任务，符合新目标；仅未明确提及历史SQL任务的完成状态与新目标的关系，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：未使用归档JD作为决策依据，未重复已完成任务，任务可验收，时间合规。
+- **Notes**：目标切换正确，任务具体，符合新方向。","- **Task Actionability：2 / 5**
+  理由：任务仅为“学习并实践提升Evaluation能力到2级的相关知识和技能”，方向有但具体内容、步骤、产出都严重缺失；验收标准模糊；8小时远超每日1小时的时间预算，时间设置不合理。
+- **Decision Reasonableness：2 / 5**
+  理由：虽然方向是提升Evaluation，但仅简单陈述差距，未结合目标变更的背景论证，且遗漏了每日1小时的重要时间约束，重要约束被遗漏。
+- **Replanning：2 / 5**
+  理由：仅做了目标切换，但未对历史SQL任务做任何承接说明，也未解释切换原因，重规划的合理性和连续性不足。
+- **Constraint Violations：Yes**
+  理由：预计时间8小时，严重违反用户每日可用1小时的时间约束；且任务空泛，验收标准模糊。
+- **Notes**：任务过于宏观，时间严重超预算，可执行性差。",方案A正确响应了目标变更，任务具体可执行，时间符合预算，验收清晰；方案B任务空泛，时间严重超出用户可用范围，无法落地。
+C14,target_change,5,4,4,No,优先级判断准确，任务具体可执行。,2,3,3,No,任务空泛，可执行性弱。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：5 / 5**
+  理由：任务具体，用pandas做数据集清洗和探索性分析，生成报告，明确产出内容；验收标准清晰可验证；60分钟时长匹配任务难度，符合每日预算，可直接执行。
+- **Decision Reasonableness：4 / 5**
+  理由：正确识别多岗位中Data Analysis是must_have且未达标，优先级高于bonus的Agent，决策方向正确；基于1级水平设计实践任务，理由清晰。
+- **Replanning：4 / 5**
+  理由：正确响应目标优先级，从已完成的Agent切换到Data Analysis，符合岗位核心要求；仅未明确说明Agent任务的完成状态与新目标的关系，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：未重复已完成任务，未使用归档JD，无违规。
+- **Notes**：优先级判断准确，任务具体可执行。","- **Task Actionability：2 / 5**
+  理由：仅“学习2级相关知识，记录笔记”，有方向但具体内容、产出要求、知识点范围均严重缺失；验收标准模糊，可执行性差。
+- **Decision Reasonableness：3 / 5**
+  理由：优先Data Analysis的方向正确，基于多岗位must_have的判断依据正确，但任务设计过于笼统，未结合能力等级设计对应内容，权衡不完整。
+- **Replanning：3 / 5**
+  理由：基本切换了方向，但未承接Agent的历史完成情况，连续性不足。
+- **Constraint Violations：No**
+  理由：无明确违规项，但任务质量低。
+- **Notes**：任务空泛，可执行性弱。",方案A任务具体可落地，验收清晰，时间合理，能够实际锻炼数据分析能力；方案B过于笼统，执行性差。
+C15,long_history,4,4,4,No,响应反馈准确，任务递进清晰。,3,3,3,No,任务方向正确，但验收和承接性弱于方案A。,A,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：4 / 5**
+  理由：任务明确为第22组窗口函数练习，产出清晰；验收标准包含代码正确、保存输出，较全面；60分钟时长合理。仅练习具体题量需少量澄清。
+- **Decision Reasonableness：4 / 5**
+  理由：结合岗位SQL 3级的要求，以及最新反馈聚焦窗口函数，决策方向正确，理由清晰，充分使用了反馈信息。
+- **Replanning：4 / 5**
+  理由：承接了JOIN已完成的进度，切换到窗口函数练习，响应了反馈，保持了SQL能力提升的连续性，任务递进合理，仅未总结长历史的整体进度，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：充分使用了partial反馈，未重复已完成任务，无违规。
+- **Notes**：响应反馈准确，任务递进清晰。","- **Task Actionability：3 / 5**
+  理由：任务为第22组窗口函数练习，方向明确，但验收标准仅“成功完成并保存”，比方案A模糊，缺少代码正确性的验证标准。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，知道要聚焦窗口函数，但理由表述简略，未结合岗位要求和能力差距充分论证，权衡不完整。
+- **Replanning：3 / 5**
+  理由：基本响应了反馈切换到窗口函数，但承接性不足，未明确确认JOIN已完成的成果，连续性一般。
+- **Constraint Violations：No**
+  理由：未违规，基本使用了反馈。
+- **Notes**：任务方向正确，但验收和承接性弱于方案A。",方案A的验收标准更清晰全面，决策理由更充分，重规划的承接性更好，任务可执行性更强；方案B相对粗糙。
+C16,long_history,3,3,3,Yes,方向正确但时间设置不合理。,4,4,4,No,响应反馈准确，承接性好。,B,Independent AI Judge #2,blind A/B review using frozen rubric,false,768efa68fcb188b4ac7b271d61f98b9c8148e60e200c283c31546ab01e113e63,"- **Task Actionability：3 / 5**
+  理由：任务为一道GROUP BY查询练习，方向明确，产出清晰。但验收标准较笼统，60分钟时长与“一道题”的难度不匹配，时间过长。
+- **Decision Reasonableness：3 / 5**
+  理由：方向正确，响应了反馈做GROUP BY，但理由简略，未结合长历史进度和岗位目标充分论证，权衡不完整。
+- **Replanning：3 / 5**
+  理由：基本响应了超时的反馈，切换到GROUP BY单题练习，但承接性不足，未明确总结JOIN的完成进度，时间设置也未匹配“单题”的难度。
+- **Constraint Violations：Yes**
+  理由：一道GROUP BY查询练习不需要60分钟，时间设置不合理，违反时间合理性约束。
+- **Notes**：方向正确但时间设置不合理。","- **Task Actionability：4 / 5**
+  理由：任务为一道GROUP BY查询练习，产出明确；验收标准包含完整代码和输出，较清晰；60分钟时长偏长，但考虑到用户基础薄弱也可接受，仅时间合理性有少量瑕疵。
+- **Decision Reasonableness：4 / 5**
+  理由：结合岗位要求、历史进度和最新反馈，决策做GROUP BY单题练习，理由清晰，充分使用了反馈信息。
+- **Replanning：4 / 5**
+  理由：承接了长历史的JOIN练习进度，响应超时反馈调整为单道GROUP BY题，保持了SQL提升的连续性，调整合理，仅时间设置略保守，属于小瑕疵。
+- **Constraint Violations：No**
+  理由：充分使用了反馈，未重复任务，时间虽偏长但在每日预算内，无明确违规。
+- **Notes**：响应反馈准确，承接性好。",方案B的决策理由更充分，重规划的承接性更好，验收标准更清晰；方案A时间设置合理性稍差，理由也更单薄。

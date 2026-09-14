@@ -1,5 +1,5 @@
 """Active-JD facts, deterministic order, one capability contribution per JD."""
-from core.capabilities import normalize_capability
+from core.capabilities import normalize_capability, normalize_jd_requirement
 from core.errors import BusinessError
 from core.gap_engine import validate_level
 
@@ -48,17 +48,25 @@ def aggregate_requirements(jds):
             evidence = item.get("evidence")
             if not isinstance(evidence, str) or not evidence.strip():
                 invalid("JD Requirement 缺少原文 Evidence。")
-            row = per_jd.setdefault(name, {"importance": label, "level": required, "evidence": set()})
+            projected = normalize_jd_requirement(item)
+            required = projected["required_level"]
+            row = per_jd.setdefault(name, {"importance": label, "level": required, "evidence": set(), "raw_names": set(), "unknown": False})
             row["importance"] = max((row["importance"], label), key=IMPORTANCE_VALUES.get)
             row["level"] = max(row["level"], required)
             row["evidence"].add(evidence)
+            row["raw_names"].update(projected["raw_names"])
+            row["unknown"] = row["unknown"] or required == 0
         if not per_jd:
             empty_ids.append(jd["id"])
         for name, item in per_jd.items():
             row = merged.setdefault(name, {"capability_name": name, "active_jd_count": 0,
                 "total_active_jd_count": len(active), "jd_ids": [], "importance_values": [],
-                "importance_labels": [], "required_levels": [], "evidence_by_jd": {}})
+                "importance_labels": [], "required_levels": [], "evidence_by_jd": {}, "raw_names_by_jd": {}, "unknown_jd_ids": [], "requirement_level_unknown": False})
             row["jd_ids"].append(jd["id"])
+            row["raw_names_by_jd"][str(jd["id"])] = sorted(item["raw_names"])
+            if item["unknown"]:
+                row["unknown_jd_ids"].append(jd["id"])
+                row["requirement_level_unknown"] = True
             row["active_jd_count"] += 1
             row["importance_values"].append(IMPORTANCE_VALUES[item["importance"]])
             row["importance_labels"].append(item["importance"])

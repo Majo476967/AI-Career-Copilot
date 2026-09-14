@@ -4,8 +4,9 @@ import os
 import uuid
 import streamlit as st
 from core.errors import BusinessError
+from core.planner import user_visible_reason
 from storage.database import DEFAULT_DATABASE_PATH
-from ui.adapter import (open_product, run_once, operation_key, profile_changes, level_label,
+from ui.adapter import (open_product, run_once, operation_key, profile_changes, level_label, requirement_rows,
                         LEVEL_LABELS, STAGE_LABELS, STATUS_LABELS, TRIGGER_LABELS, evidence_text)
 
 
@@ -29,6 +30,8 @@ def render_evidence(evidence):
         st.caption("暂时没有可验证证据，可重新上传更完整的简历并确认。")
     for item in evidence:
         st.write(evidence_text(item["content"]))
+        if item.get("evidence_type") == "user_confirmed_resume_evidence":
+            st.caption("用户确认的简历证据，不是 LLM 自动认证。")
         source = {"resume": "简历", "task": "任务反馈", "test": "演示记录"}.get(item.get("source"), "其他来源")
         st.caption(f"来源：{source} · 时间：{item.get('created_at') or '未记录'}")
 
@@ -44,6 +47,8 @@ def dashboard(ui):
     c.metric("当前重点", top["capability"] if top else "待分析")
     if vm["empty_message"]:
         st.info(vm["empty_message"])
+    for warning in vm["priority"].get("warnings", []):
+        st.warning(warning)
     if vm["needs_retry"]:
         st.warning("最近一次任务规划未完成，已保存的档案和反馈仍保留，可稍后重新规划。")
     if top:
@@ -69,7 +74,7 @@ def dashboard(ui):
         with st.container(border=True):
             st.write(task["task_text"])
             st.caption("预计用时：" + task["estimated_time"])
-            st.write("安排理由：" + task["reason"])
+            st.write("安排理由：" + user_visible_reason(task["reason"]))
             st.write("验收标准")
             for criterion in task["acceptance_criteria_json"]:
                 st.write("• " + criterion)
@@ -102,7 +107,7 @@ def dashboard(ui):
             st.rerun()
     if vm["replanning_reason"]:
         with st.expander("最近一次规划为什么这样安排"):
-            st.write(vm["replanning_reason"])
+            st.write(user_visible_reason(vm["replanning_reason"]))
 
 
 def profile_page(ui):
@@ -145,6 +150,29 @@ def profile_page(ui):
                            format_func=lambda value: f"草稿 #{value}")
     draft = next(d for d in drafts if d["id"] == draft_id)
     data = draft["draft_json"]
+    data = ui.profiles.review_profile_draft(draft_id)
+    if data["missing_capabilities"]:
+        st.subheader("检测到可能遗漏的能力")
+        for missing in data["missing_capabilities"]:
+            name = missing["canonical_name"]
+            st.write(name)
+            st.caption("AI 没有把这项能力加入画像。请确认是否需要补充。")
+            for snippet in missing["evidence_snippets"]:
+                st.write("检测依据：" + snippet)
+            with st.form(f"recover_{draft_id}_{name}"):
+                chosen_level = st.selectbox("选择能力等级", list(range(5)), index=None,
+                    format_func=level_label, placeholder="请自行选择等级", key=f"recover_level_{draft_id}_{name}")
+                chosen_evidence = st.selectbox("确认简历证据", missing["evidence_snippets"], key=f"recover_evidence_{draft_id}_{name}")
+                st.caption("添加后记录为用户确认的简历证据，不是 LLM 自动认证。3/4 级仍须有项目或实习等经历依据。")
+                add = st.form_submit_button("添加到草稿")
+                ignore = st.form_submit_button("不纳入")
+            if add or ignore:
+                action = "add" if add else "ignore"
+                result = perform(operation_key(f"recover:{draft_id}:{draft['updated_at']}:{name}", (action, chosen_level, chosen_evidence)),
+                    lambda: ui.profiles.resolve_missing_capability(draft_id, name, action, level=chosen_level, evidence_snippet=chosen_evidence),
+                    "正在重新校验草稿…", "草稿已更新，正式用户状态未改变。")
+                if result:
+                    st.rerun()
     st.warning("AI 已生成用户画像草稿，请确认。以下内容尚未进入正式档案。")
     with st.form(f"draft_{draft_id}"):
         fields = {}
@@ -163,7 +191,7 @@ def profile_page(ui):
                 column_config={"等级": st.column_config.SelectboxColumn(options=[level_label(i) for i in range(5)], required=True)})
         st.caption("可修改能力名称、等级或取消保留；证据只读。高等级须有相应来源支持。")
         save = st.form_submit_button("保存草稿修改")
-        confirm = st.form_submit_button("确认并更新正式档案", type="primary")
+        confirm = st.form_submit_button("确认并更新正式档案", type="primary", disabled=data["validation_status"] != "valid")
     with st.expander("核对草稿证据及原文"):
         st.text(draft["resume_text"])
         for capability in data["capabilities"]:
@@ -185,9 +213,7 @@ def profile_page(ui):
 
 
 def requirement_table(data):
-    st.dataframe([{"能力": c["name"], "要求等级": level_label(c["required_level"]),
-        "重要程度": {"must_have": "必需", "important": "重要", "bonus": "加分"}.get(c["importance"], c["importance"]),
-        "岗位原文依据": c["evidence"]} for c in data.get("capabilities", [])], hide_index=True)
+    st.dataframe(requirement_rows(data), hide_index=True)
 
 
 def jobs_page(ui):
@@ -295,7 +321,7 @@ def progress_page(ui):
             st.write("当时优先方向：" + (top["capability"] if top else "暂无明确差距"))
             selected = snapshot["selected_task_json"]
             st.write("当时选择的任务：" + (selected.get("task_text", "未生成任务") if selected else "未生成任务"))
-            st.write(snapshot["reason"])
+            st.write(user_visible_reason(snapshot["reason"]))
 
 
 def main():

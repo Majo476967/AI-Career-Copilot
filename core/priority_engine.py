@@ -11,13 +11,14 @@ TIE_BREAK = ["score desc", "gap_severity desc", "coverage desc", "importance des
 STATUS_REASON = {"ok": "按多岗位覆盖下的准备优先级排序。",
     "no_active_jd": "暂无 Active JD，请先添加目标岗位。",
     "no_valid_capabilities": "Active JD 尚无有效能力条目，请补充或重新分析。",
+    "insufficient_requirement_data": "岗位要求深度未明确，且其他能力没有形成有效 Priority；请补充岗位要求后重新分析。",
     "no_positive_gap": "暂无明确正向 Gap，不强行推荐能力。",
     "no_confirmed_profile": "尚无 Confirmed Profile，请先确认用户画像。"}
 
 
 def empty_result(status, reason=None):
     return {"status": status, "requirements": [], "gaps": [], "ranked_priorities": [],
-            "top_priority": None, "reason": reason or STATUS_REASON.get(status, "输入数据不合法。")}
+            "top_priority": None, "warnings": [], "unknown_requirement_capabilities": [], "reason": reason or STATUS_REASON.get(status, "输入数据不合法。")}
 
 
 def user_levels(capabilities):
@@ -44,9 +45,15 @@ def calculate_priorities(jds, capabilities):
         result.update(aggregation)
         if aggregation["status"] != "ok":
             return result
+        unknown = [r["capability_name"] for r in aggregation["requirements"] if r["requirement_level_unknown"]]
+        result["unknown_requirement_capabilities"] = unknown
+        if unknown:
+            result["warnings"] = ["岗位要求深度未明确：" + "、".join(unknown) + "。这些能力数据不足，暂不参与定量 Priority；其他能力继续计算。"]
         ranked = []
         for requirement in aggregation["requirements"]:
             name = requirement["capability_name"]
+            if requirement["requirement_level_unknown"]:
+                continue  # Unknown requirements never enter numeric Gap calculation.
             gap = calculate_gap(levels.get(name, 0), requirement["required_levels"])
             result["gaps"].append({"capability": name, **gap})
             # Filter BEFORE scoring: zero gap cannot win on coverage/importance.
@@ -83,7 +90,7 @@ def calculate_priorities(jds, capabilities):
             row["reason"]["rank"] = rank
             row["reason"]["selection"] = ("正向 Gap 候选中按 Score 及固定同分规则排名第一。" if rank == 1
                                            else "按 Score 及固定同分规则排序。")
-        result.update(status="ok" if ranked else "no_positive_gap", ranked_priorities=ranked,
+        result.update(status="ok" if ranked else ("insufficient_requirement_data" if unknown else "no_positive_gap"), ranked_priorities=ranked,
                       top_priority=ranked[0] if ranked else None)
         result["reason"] = STATUS_REASON[result["status"]]
         return result

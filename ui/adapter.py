@@ -1,9 +1,10 @@
 """Small UI projection/action adapter. No duplicate gap, priority or memory algorithms."""
 from contextlib import contextmanager
-from copy import deepcopy
 import hashlib
 import json
 from core.errors import BusinessError
+from core.planner import GAP_LABELS
+from core.capabilities import normalize_jd_requirement
 from core.router import EventRouter
 from services.profile_service import ProfileService
 from services.jd_service import JDService
@@ -13,8 +14,7 @@ from storage.database import connect_database, DEFAULT_DATABASE_PATH
 from storage.repository import Repository
 
 LEVEL_LABELS = {0: "当前证据不足", 1: "知识理解", 2: "实践", 3: "真实经历", 4: "深度能力"}
-STAGE_LABELS = {"evidence_knowledge_verification": "补充或核实基础知识证据", "practice": "动手练习",
-                "experience": "贴近真实业务场景", "depth": "优化与深入评估"}
+STAGE_LABELS = GAP_LABELS
 STATUS_LABELS = {"pending": "待完成", "completed": "已完成", "partial": "部分完成",
                  "not_completed": "未完成", "superseded": "已调整"}
 TRIGGER_LABELS = {"PROFILE_CONFIRMED": "画像确认", "JD_ADDED": "新增岗位", "JD_ARCHIVED": "岗位归档",
@@ -24,6 +24,22 @@ TRIGGER_LABELS = {"PROFILE_CONFIRMED": "画像确认", "JD_ADDED": "新增岗位
 
 def level_label(level):
     return f"{level} · {LEVEL_LABELS.get(level, '待确认')}"
+
+
+def requirement_level_label(level):
+    labels = {1: "基础理解", 2: "实践使用", 3: "真实经历", 4: "深度能力"}
+    return f"{level} · {labels[level]}" if level in labels else "岗位未明确等级"
+
+
+def requirement_rows(data):
+    rows = []
+    for original in data.get("capabilities", []):
+        c = normalize_jd_requirement(original)
+        rows.append({"能力": c["name"], "原始能力名称": "、".join(c["raw_names"]),
+            "要求等级": requirement_level_label(c["required_level"]),
+            "重要程度": {"must_have": "必需", "important": "重要", "bonus": "加分"}.get(c["importance"], c["importance"]),
+            "岗位原文依据": c["evidence"]})
+    return rows
 
 
 def validate_feedback(status, feedback):
@@ -65,7 +81,9 @@ def run_once(state, key, operation):
 
 
 def profile_changes(draft, fields, rows):
-    data = deepcopy(draft["draft_json"])
+    # Only editable form fields cross the generic update boundary.
+    # Validation, overrides and provenance remain owned by the service.
+    data = {}
     for field in ("education", "internships", "projects", "skills"):
         data[field] = [line.strip() for line in fields[field].splitlines() if line.strip()]
     for field in ("major", "target_direction", "available_hours_per_day"):
@@ -132,7 +150,8 @@ class ProductAdapter:
     def job_summary(self):
         result = self.jobs.get_active_jd_requirements()
         return [{"能力": r["capability_name"], "岗位覆盖": f"{r['active_jd_count']}/{r['total_active_jd_count']}",
-                 "要求等级": "、".join(str(n) for n in r["required_levels"]),
+                 "要求等级": "、".join(requirement_level_label(n) for n in r["required_levels"]),
+                 "原始能力名称": "；".join("、".join(names) for names in r["raw_names_by_jd"].values()),
                  "重要程度": "、".join({"must_have": "必需", "important": "重要", "bonus": "加分"}[v] for v in r["importance_labels"])}
                 for r in result["requirements"]]
 

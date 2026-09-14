@@ -16,10 +16,26 @@ estimated_time 使用 N min，不超过输入 task_budget_minutes。任务必须
 evidence_knowledge_verification：核实或补充基础知识证据，Level 0 是未知证据，不是用户很弱。
 practice：实际练习、Demo 或小任务；experience：接近真实业务场景的下一步；
 depth：优化、评估、复杂 Bad Case 或系统设计。不能用单个任务宣称获得真实 Experience 或升级 Level。
-必须使用 latest_feedback 和相关 history / summary：completed 后做下一练习；
+仅当 latest_feedback 非空时才允许引用该反馈。latest_feedback 为空表示没有可引用的用户反馈；reason 禁止“根据最新反馈”“根据你的反馈”“你反馈说”“用户反馈表明”等归因，只能依据输入中实际存在的 State、Resume Evidence、Active JD、History 或 Summary。
+有真实 latest_feedback 时结合相关 history / summary：completed 后做下一练习；
 partial 聚焦用户明确卡点、保留已完成部分；not_completed 根据明确原因缩小任务或补前置。
-缺少原因时不得猜测。reason 解释如何使用已知反馈，不将推断写成用户事实。
+缺少原因时不得猜测。reason 解释如何使用已知事实，不将推断写成用户事实。
+用户可见 reason 不输出内部 gap_type：evidence_knowledge_verification 写作“补充或核实基础能力证据”，practice 写作“实践应用”，experience 写作“真实场景经验”，depth 写作“深度能力”。
 避免与近期任务完全相同或语义重复，不原样重发旧任务。不得把多个能力混成一个任务。"""
+
+
+
+GAP_LABELS = {"evidence_knowledge_verification": "补充或核实基础能力证据",
+              "practice": "实践应用", "experience": "真实场景经验", "depth": "深度能力"}
+
+
+def user_visible_reason(value):
+    return re.sub(r"(?<![A-Za-z_])(?:" + "|".join(GAP_LABELS) + r")(?![A-Za-z_])",
+                  lambda match: GAP_LABELS[match.group().lower()], value, flags=re.I)
+
+
+def cites_feedback(reason):
+    return bool(re.search(r"(?:根据|依据|结合|基于).{0,16}反馈|最新反馈|(?:你|您|用户).{0,5}反馈(?:说|表明|指出|显示)|反馈(?:表明|显示|指出)|(?:based on|according to).{0,20}feedback", reason, re.I))
 
 
 def task_budget(hours):
@@ -62,7 +78,7 @@ def validate_task(data, top_capability, budget_minutes):
     minutes = duration_minutes(data["estimated_time"])
     if minutes > budget_minutes:
         raise BusinessError("time_budget_exceeded", "任务超过当前可用时间预算。")
-    return Task(top_capability, data["task"].strip(), data["reason"].strip(),
+    return Task(top_capability, data["task"].strip(), user_visible_reason(data["reason"].strip()),
                 f"{minutes:g} min", [c.strip() for c in criteria])
 
 
@@ -82,4 +98,7 @@ class TaskPlanner:
             data = json.loads(raw)
         except (ValueError, TypeError):
             raise BusinessError("invalid_task_json", "Planner 未返回有效 JSON 对象。") from None
-        return validate_task(data, context["top_priority"]["capability"], context["task_budget_minutes"])
+        task = validate_task(data, context["top_priority"]["capability"], context["task_budget_minutes"])
+        if not context.get("latest_feedback") and cites_feedback(task.reason):
+            raise BusinessError("unsupported_feedback_attribution", "任务理由引用了不存在的用户反馈，结果未保存，请重新规划。")
+        return task

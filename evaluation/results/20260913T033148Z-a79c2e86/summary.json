@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "n": 16,
+    "api_errors": 0,
+    "parseable_n": 16,
+    "delivered_n": 16,
+    "state_check_accuracy": 1.0,
+    "state_check_n": 38,
+    "completed_duplicate_rate": 0.0,
+    "mean_active_jd_coverage": 0.9041666666666667,
+    "feedback_anchor_proxy": 1.0,
+    "human_scores": null
+  },
+  "copilot": {
+    "n": 16,
+    "api_errors": 0,
+    "parseable_n": 16,
+    "delivered_n": 16,
+    "state_check_accuracy": 1.0,
+    "state_check_n": 38,
+    "completed_duplicate_rate": 0.0,
+    "mean_active_jd_coverage": 0.9041666666666667,
+    "feedback_anchor_proxy": 1.0,
+    "human_scores": null
+  }
+}

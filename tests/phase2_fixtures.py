@@ -11,7 +11,9 @@ PROFILE = {
     "internships": ["在虚构实验室实习，使用 SQL 完成订单查询练习。"],
     "projects": ["创建天气统计 Demo。"], "skills": ["SQL", "Python"],
     "capabilities": [{"name": "SQL能力", "level": 2, "evidence": [{
-        "evidence_type": "internship", "content": "在虚构实验室实习，使用 SQL 完成订单查询练习。", "source": "resume"}]}],
+        "evidence_type": "internship", "content": "在虚构实验室实习，使用 SQL 完成订单查询练习。", "source": "resume"}]},
+        {"name": "Python基础", "level": 1, "evidence": [{"evidence_type": "skill",
+         "content": "了解 Python 基础。", "source": "resume"}]}],
 }
 
 

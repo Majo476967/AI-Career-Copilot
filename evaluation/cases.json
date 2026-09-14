@@ -1,0 +1,1565 @@
+[
+  {
+    "case_id": "C01",
+    "scenario_type": "single_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Programming",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：Programming 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have；Programming 要求等级 2，重要程度 important",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          },
+          {
+            "name": "Programming",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Programming 要求等级 2，重要程度 important"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C02",
+    "scenario_type": "single_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "Evaluation",
+        "level": 0,
+        "evidence": []
+      },
+      {
+        "capability_name": "Agent",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：Agent 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Evaluation 要求等级 2，重要程度 important；Agent 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Evaluation",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Evaluation 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Agent",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Agent 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C03",
+    "scenario_type": "single_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "User Research",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：User Research 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Product Design",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：Product Design 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "User Research 要求等级 2，重要程度 important；Product Design 要求等级 3，重要程度 important",
+        "capabilities": [
+          {
+            "name": "User Research",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "User Research 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Product Design",
+            "required_level": 3,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Product Design 要求等级 3，重要程度 important"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C04",
+    "scenario_type": "multi_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Data Analysis",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Data Analysis 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 important；Data Analysis 要求等级 2，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "company": "虚构公司2",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 important；Data Analysis 要求等级 2，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "company": "虚构公司3",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 important；Data Analysis 要求等级 2，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "company": "虚构公司4",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 important；Data Analysis 要求等级 2，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "company": "虚构公司5",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Data Analysis 要求等级 2，重要程度 important",
+        "capabilities": [
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 important"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C05",
+    "scenario_type": "multi_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Agent",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Agent 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have；Agent 要求等级 3，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          },
+          {
+            "name": "Agent",
+            "required_level": 3,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Agent 要求等级 3，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "company": "虚构公司2",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "company": "虚构公司3",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 1，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 1,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 1，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C06",
+    "scenario_type": "multi_jd",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "RAG",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：RAG 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Evaluation",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Evaluation 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "RAG 要求等级 1，重要程度 important；Evaluation 要求等级 2，重要程度 important",
+        "capabilities": [
+          {
+            "name": "RAG",
+            "required_level": 1,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "RAG 要求等级 1，重要程度 important"
+          },
+          {
+            "name": "Evaluation",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Evaluation 要求等级 2，重要程度 important"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "company": "虚构公司2",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "RAG 要求等级 4，重要程度 important",
+        "capabilities": [
+          {
+            "name": "RAG",
+            "required_level": 4,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "RAG 要求等级 4，重要程度 important"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "company": "虚构公司3",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Evaluation 要求等级 3，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "Evaluation",
+            "required_level": 3,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Evaluation 要求等级 3，重要程度 bonus"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [],
+    "latest_feedback": null,
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C07",
+    "scenario_type": "completed",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "SQL",
+      "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+      "status": "completed",
+      "feedback": "",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C08",
+    "scenario_type": "completed",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Data Analysis",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Data Analysis 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 important；Data Analysis 要求等级 2，重要程度 important",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 important"
+          },
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "important",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 important"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      },
+      {
+        "id": 2,
+        "capability": "SQL",
+        "task": "完成第2组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-02T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 2,
+      "capability": "SQL",
+      "task": "完成第2组 JOIN 查询练习，保存代码和输出",
+      "status": "completed",
+      "feedback": "",
+      "created_at": "2026-08-02T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C09",
+    "scenario_type": "partial",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 3，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 3,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 3，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "partial",
+        "feedback": "JOIN 已完成，但 correlated subquery 还不会。",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "SQL",
+      "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+      "status": "partial",
+      "feedback": "JOIN 已完成，但 correlated subquery 还不会。",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "correlated subquery",
+        "关联子查询"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C10",
+    "scenario_type": "partial",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "Agent",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Agent 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Agent 要求等级 3，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Agent",
+            "required_level": 3,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Agent 要求等级 3，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "Agent",
+        "task": "完成第1组 Tool Calling 练习，保存工具定义、参数校验代码和输出",
+        "status": "partial",
+        "feedback": "已理解 Agent 概念，Tool Calling 参数校验仍出错。",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      },
+      {
+        "id": 2,
+        "capability": "Agent",
+        "task": "完成第2组 Tool Calling 练习，保存工具定义、参数校验代码和输出",
+        "status": "partial",
+        "feedback": "只完成工具定义，仍卡在参数校验。",
+        "created_at": "2026-08-02T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 2,
+      "capability": "Agent",
+      "task": "完成第2组 Tool Calling 练习，保存工具定义、参数校验代码和输出",
+      "status": "partial",
+      "feedback": "只完成工具定义，仍卡在参数校验。",
+      "created_at": "2026-08-02T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "参数校验"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C11",
+    "scenario_type": "not_completed",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "not_completed",
+        "feedback": "昨天任务太大，今天只能投入十分钟。",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "SQL",
+      "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+      "status": "not_completed",
+      "feedback": "昨天任务太大，今天只能投入十分钟。",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "十分钟",
+        "10 min",
+        "10分钟"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C12",
+    "scenario_type": "not_completed",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "Evaluation",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Evaluation 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Evaluation 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Evaluation",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Evaluation 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "Evaluation",
+        "task": "完成第1组模型回答评测练习，保存测试数据、评分依据和报告",
+        "status": "not_completed",
+        "feedback": "缺少可用的测试数据，请先安排构建小样本测试集。",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "Evaluation",
+      "task": "完成第1组模型回答评测练习，保存测试数据、评分依据和报告",
+      "status": "not_completed",
+      "feedback": "缺少可用的测试数据，请先安排构建小样本测试集。",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "测试集",
+        "测试数据"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C13",
+    "scenario_type": "target_change",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Evaluation",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Evaluation 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Evaluation 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Evaluation",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Evaluation 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [
+      {
+        "id": 9,
+        "company": "虚构公司9",
+        "job_title": "虚构实习岗位",
+        "status": "archived",
+        "jd_text": "SQL 要求等级 3，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 3,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 3，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "SQL",
+      "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+      "status": "completed",
+      "feedback": "",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C14",
+    "scenario_type": "target_change",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "Agent",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Agent 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Data Analysis",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：Data Analysis 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Agent 要求等级 2，重要程度 bonus",
+        "capabilities": [
+          {
+            "name": "Agent",
+            "required_level": 2,
+            "importance": "bonus",
+            "category": "technical",
+            "evidence": "Agent 要求等级 2，重要程度 bonus"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "company": "虚构公司2",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Data Analysis 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 must_have"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "company": "虚构公司3",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "Data Analysis 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "Data Analysis",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "Data Analysis 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "Agent",
+        "task": "完成第1组 Tool Calling 练习，保存工具定义、参数校验代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 1,
+      "capability": "Agent",
+      "task": "完成第1组 Tool Calling 练习，保存工具定义、参数校验代码和输出",
+      "status": "completed",
+      "feedback": "",
+      "created_at": "2026-08-01T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C15",
+    "scenario_type": "long_history",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      },
+      {
+        "capability_name": "Product Design",
+        "level": 2,
+        "evidence": [
+          "虚构确认事实：Product Design 当前为 2 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 3，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 3,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 3，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "Product Design",
+        "task": "完成第1组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      },
+      {
+        "id": 2,
+        "capability": "Product Design",
+        "task": "完成第2组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-02T08:00:00+00:00"
+      },
+      {
+        "id": 3,
+        "capability": "Product Design",
+        "task": "完成第3组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-03T08:00:00+00:00"
+      },
+      {
+        "id": 4,
+        "capability": "Product Design",
+        "task": "完成第4组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-04T08:00:00+00:00"
+      },
+      {
+        "id": 5,
+        "capability": "Product Design",
+        "task": "完成第5组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-05T08:00:00+00:00"
+      },
+      {
+        "id": 6,
+        "capability": "Product Design",
+        "task": "完成第6组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-06T08:00:00+00:00"
+      },
+      {
+        "id": 7,
+        "capability": "Product Design",
+        "task": "完成第7组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-07T08:00:00+00:00"
+      },
+      {
+        "id": 8,
+        "capability": "Product Design",
+        "task": "完成第8组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-08T08:00:00+00:00"
+      },
+      {
+        "id": 9,
+        "capability": "Product Design",
+        "task": "完成第9组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-09T08:00:00+00:00"
+      },
+      {
+        "id": 10,
+        "capability": "Product Design",
+        "task": "完成第10组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-10T08:00:00+00:00"
+      },
+      {
+        "id": 11,
+        "capability": "Product Design",
+        "task": "完成第11组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-11T08:00:00+00:00"
+      },
+      {
+        "id": 12,
+        "capability": "Product Design",
+        "task": "完成第12组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-12T08:00:00+00:00"
+      },
+      {
+        "id": 13,
+        "capability": "Product Design",
+        "task": "完成第13组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-13T08:00:00+00:00"
+      },
+      {
+        "id": 14,
+        "capability": "Product Design",
+        "task": "完成第14组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-14T08:00:00+00:00"
+      },
+      {
+        "id": 15,
+        "capability": "Product Design",
+        "task": "完成第15组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-15T08:00:00+00:00"
+      },
+      {
+        "id": 16,
+        "capability": "Product Design",
+        "task": "完成第16组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-16T08:00:00+00:00"
+      },
+      {
+        "id": 17,
+        "capability": "Product Design",
+        "task": "完成第17组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-17T08:00:00+00:00"
+      },
+      {
+        "id": 18,
+        "capability": "Product Design",
+        "task": "完成第18组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-18T08:00:00+00:00"
+      },
+      {
+        "id": 19,
+        "capability": "Product Design",
+        "task": "完成第19组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-19T08:00:00+00:00"
+      },
+      {
+        "id": 20,
+        "capability": "Product Design",
+        "task": "完成第20组虚构产品原型练习，保存交互图和设计说明",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-20T08:00:00+00:00"
+      },
+      {
+        "id": 21,
+        "capability": "SQL",
+        "task": "完成第21组 JOIN 查询练习，保存代码和输出",
+        "status": "partial",
+        "feedback": "JOIN 已完成，请聚焦窗口函数。",
+        "created_at": "2026-08-21T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 21,
+      "capability": "SQL",
+      "task": "完成第21组 JOIN 查询练习，保存代码和输出",
+      "status": "partial",
+      "feedback": "JOIN 已完成，请聚焦窗口函数。",
+      "created_at": "2026-08-21T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "窗口函数"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  },
+  {
+    "case_id": "C16",
+    "scenario_type": "long_history",
+    "user_profile": {
+      "education": "虚构学院本科",
+      "major": "软件工程",
+      "target_direction": "实习岗位准备",
+      "available_hours_per_day": 1,
+      "resume_text": "虚构测试用户，仅用于评测。能力事实以已确认档案为准。"
+    },
+    "capabilities": [
+      {
+        "capability_name": "SQL",
+        "level": 1,
+        "evidence": [
+          "虚构确认事实：SQL 当前为 1 级，有对应阶段的自报经历记录。"
+        ]
+      }
+    ],
+    "active_jds": [
+      {
+        "id": 1,
+        "company": "虚构公司1",
+        "job_title": "虚构实习岗位",
+        "status": "active",
+        "jd_text": "SQL 要求等级 2，重要程度 must_have",
+        "capabilities": [
+          {
+            "name": "SQL",
+            "required_level": 2,
+            "importance": "must_have",
+            "category": "technical",
+            "evidence": "SQL 要求等级 2，重要程度 must_have"
+          }
+        ]
+      }
+    ],
+    "archived_jds": [],
+    "history": [
+      {
+        "id": 1,
+        "capability": "SQL",
+        "task": "完成第1组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-01T08:00:00+00:00"
+      },
+      {
+        "id": 2,
+        "capability": "SQL",
+        "task": "完成第2组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-02T08:00:00+00:00"
+      },
+      {
+        "id": 3,
+        "capability": "SQL",
+        "task": "完成第3组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-03T08:00:00+00:00"
+      },
+      {
+        "id": 4,
+        "capability": "SQL",
+        "task": "完成第4组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-04T08:00:00+00:00"
+      },
+      {
+        "id": 5,
+        "capability": "SQL",
+        "task": "完成第5组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-05T08:00:00+00:00"
+      },
+      {
+        "id": 6,
+        "capability": "SQL",
+        "task": "完成第6组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-06T08:00:00+00:00"
+      },
+      {
+        "id": 7,
+        "capability": "SQL",
+        "task": "完成第7组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-07T08:00:00+00:00"
+      },
+      {
+        "id": 8,
+        "capability": "SQL",
+        "task": "完成第8组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-08T08:00:00+00:00"
+      },
+      {
+        "id": 9,
+        "capability": "SQL",
+        "task": "完成第9组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-09T08:00:00+00:00"
+      },
+      {
+        "id": 10,
+        "capability": "SQL",
+        "task": "完成第10组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-10T08:00:00+00:00"
+      },
+      {
+        "id": 11,
+        "capability": "SQL",
+        "task": "完成第11组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-11T08:00:00+00:00"
+      },
+      {
+        "id": 12,
+        "capability": "SQL",
+        "task": "完成第12组 JOIN 查询练习，保存代码和输出",
+        "status": "completed",
+        "feedback": "",
+        "created_at": "2026-08-12T08:00:00+00:00"
+      },
+      {
+        "id": 13,
+        "capability": "SQL",
+        "task": "完成第13组 JOIN 查询练习，保存代码和输出",
+        "status": "not_completed",
+        "feedback": "任务超时，下一步只做一道 GROUP BY 查询。",
+        "created_at": "2026-08-13T08:00:00+00:00"
+      }
+    ],
+    "latest_feedback": {
+      "id": 13,
+      "capability": "SQL",
+      "task": "完成第13组 JOIN 查询练习，保存代码和输出",
+      "status": "not_completed",
+      "feedback": "任务超时，下一步只做一道 GROUP BY 查询。",
+      "created_at": "2026-08-13T08:00:00+00:00"
+    },
+    "expected_facts": {
+      "feedback_anchors": [
+        "GROUP BY"
+      ],
+      "unknown_is_not_weak": true
+    },
+    "expected_behavior": [
+      "只根据当前 Active JD 与用户证据选择合理方向，不要求唯一标准答案。",
+      "任务具体、可验收且符合每日时间预算。",
+      "不原样重复已完成任务；有明确反馈时响应已完成部分与卡点，不编造未知事实。"
+    ]
+  }
+]
